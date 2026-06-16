@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accueil - IRVE Data Explorer</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icon">⚡</span>
+        <span>
+          <strong>IRVE Data Explorer</strong>
+          <small>Infrastructures de recharge</small>
+        </span>
+      </a>
+
+      <button class="menu-button" id="menuButton" type="button">☰</button>
+
+      <nav class="nav" id="mainNav">
+        <a class="active" href="index.html">Accueil</a>
+        <a href="visualisation.html">Visualisation</a>
+        <a href="stats.html">Statistiques</a>
+      </nav>
+
+      <span class="header-badge">FISE3 – 2026</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-text">
+        <span class="pill">Application IRVE</span>
+        <h1>Étude et visualisation<br><span>des points de recharge</span></h1>
+        <p>
+          Ce site permet de choisir une station, voir sa position avec longitude / latitude,
+          puis lancer une prédiction de cluster, d’implantation ou de puissance.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="visualisation.html">Explorer les stations →</a>
+          <a class="btn secondary" href="prediction.html">Voir une prédiction</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1760538978585-f82dc257ec15?w=900&h=500&fit=crop&auto=format"
+          alt="Borne de recharge électrique">
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat-card"><strong>10</strong><span>Stations exemples</span></div>
+      <div class="stat-card"><strong>3</strong><span>Actions de prédiction</span></div>
+      <div class="stat-card"><strong>2</strong><span>Pages de résultats</span></div>
+      <div class="stat-card"><strong>0</strong><span>Framework React</span></div>
+    </section>
+
+    <section class="cards-grid">
+      <article class="feature-card blue">
+        <div class="feature-icon">🗺️</div>
+        <h3>Visualisation</h3>
+        <p>Liste déroulante des stations, filtres, sélection d’une seule station et carte basée sur longitude /
+          latitude.</p>
+        <a href="visualisation.html">Ouvrir →</a>
+      </article>
+
+      <article class="feature-card green">
+        <div class="feature-icon">🧩</div>
+        <h3>Clusters</h3>
+        <p>Affiche le résultat du clustering avec deux méthodes : DBSCAN et K-means.</p>
+        <a href="cluster.html">Ouvrir →</a>
+      </article>
+
+      <article class="feature-card purple">
+        <div class="feature-icon">📍</div>
+        <h3>Implantation</h3>
+        <p>Affiche la prédiction de l’implantation avec Random Forest, XGBoost et Boost Gradient.</p>
+        <a href="prediction.html?type=implantation">Ouvrir →</a>
+      </article>
+
+      <article class="feature-card orange">
+        <div class="feature-icon">⚙️</div>
+        <h3>Puissance</h3>
+        <p>Affiche la prédiction de puissance avec Random Forest et Random Tree.</p>
+        <a href="prediction.html?type=puissance">Ouvrir →</a>
+      </article>
+    </section>
+
+    <section class="info-box">
+      <h2>Parcours utilisateur</h2>
+      <p>
+        L’utilisateur commence sur la page Visualisation, sélectionne une station,
+        puis clique sur un bouton pour ouvrir la page de résultat adaptée.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span><strong>⚡ IRVE Data Explorer</strong></span>
+      <span>Projet Big Data / IA / Web – FISE3 – 2026</span>
+      <span class="footer-tags">HTML · CSS · JavaScript</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+
+</html>

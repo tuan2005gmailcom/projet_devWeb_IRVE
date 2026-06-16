@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prédiction - IRVE Data Explorer</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icon">⚡</span>
+        <span>
+          <strong>IRVE Data Explorer</strong>
+          <small>Infrastructures de recharge</small>
+        </span>
+      </a>
+
+      <button class="menu-button" id="menuButton" type="button">☰</button>
+
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Accueil</a>
+        <a href="visualisation.html">Visualisation</a>
+        <a href="stats.html">Statistiques</a>
+      </nav>
+
+      <span class="header-badge">FISE3 – 2026</span>
+    </div>
+  </header>
+
+  <main class="container" id="predictionPage">
+    <div class="page-heading">
+      <h1 id="predictionTitle">Prédiction</h1>
+      <p>Cette page affiche seulement le résultat demandé : implantation ou puissance.</p>
+    </div>
+
+    <section class="page-layout">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Station choisie</h2>
+            <p class="panel-note">Données utilisées pour la prédiction.</p>
+          </div>
+          <a class="btn small" href="visualisation.html">Changer</a>
+        </div>
+
+        <div class="station-summary">
+          <p><span>Nom</span><strong id="summaryName">Station Opéra</strong></p>
+          <p><span>ID</span><strong id="summaryId">FR-75001-01</strong></p>
+          <p><span>Département</span><strong id="summaryDept">Paris (75)</strong></p>
+          <p><span>Connecteur</span><strong id="summaryConnector">Type 2</strong></p>
+          <p><span>Puissance</span><strong id="summaryPower">22 kW</strong></p>
+          <p><span>Points</span><strong id="summaryPoints">4</strong></p>
+          <p><span>Accès</span><strong id="summaryAccess">Gratuit</strong></p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div id="implantationPanel">
+          <div class="main-result">
+            <span>Résultat final</span>
+            <strong id="implantationMainResult">Voirie</strong>
+          </div>
+
+          <div class="result-grid">
+            <div class="sub-panel">
+              <h3>Prédiction de l’implantation</h3>
+              <div class="method-list">
+                <div><span>Random Forest</span><strong id="rfImplantation">Voirie</strong></div>
+                <div><span>XGBoost</span><strong id="xgbImplantation">Voirie</strong></div>
+                <div><span>Boost Gradient</span><strong id="gbImplantation">Voirie</strong></div>
+              </div>
+            </div>
+
+            <div class="sub-panel">
+              <h3>Scores simulés</h3>
+              <div class="score-list">
+                <p><span>Random Forest</span><strong>94 %</strong></p>
+                <p><span>XGBoost</span><strong>93 %</strong></p>
+                <p><span>Boost Gradient</span><strong>91 %</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="powerPanel">
+          <div class="main-result">
+            <span>Résultat final</span>
+            <strong id="powerMainResult">22 kW</strong>
+          </div>
+
+          <div class="result-grid two-cards">
+            <div class="method-card purple">
+              <h3>Random Forest</h3>
+              <p>Prédiction moyenne avec plusieurs arbres.</p>
+              <strong id="rfPowerResult">22 kW</strong>
+              <small>Résultat plus stable.</small>
+            </div>
+
+            <div class="method-card orange">
+              <h3>Random Tree</h3>
+              <p>Prédiction avec un seul arbre de décision.</p>
+              <strong id="treePowerResult">22 kW</strong>
+              <small>Résultat plus simple mais moins stable.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-simple">
+          La page change automatiquement selon le bouton cliqué depuis Visualisation : implantation ou puissance.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span><strong>⚡ IRVE Data Explorer</strong></span>
+      <span>Projet Big Data / IA / Web – FISE3 – 2026</span>
+      <span class="footer-tags">Random Forest · XGBoost · Random Tree</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistiques - IRVE Data Explorer</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icon">⚡</span>
+        <span>
+          <strong>IRVE Data Explorer</strong>
+          <small>Infrastructures de recharge</small>
+        </span>
+      </a>
+
+      <button class="menu-button" id="menuButton" type="button">☰</button>
+
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Accueil</a>
+        <a href="visualisation.html">Visualisation</a>
+        <a class="active" href="stats.html">Statistiques</a>
+      </nav>
+
+      <span class="header-badge">FISE3 – 2026</span>
+    </div>
+  </header>
+
+  <main class="container" id="statsPage">
+    <div class="page-heading">
+      <h1>Statistiques des stations</h1>
+      <p>Sélectionnez un département dans le menu déroulant pour afficher les statistiques des stations correspondantes.</p>
+    </div>
+
+    <section class="filter-bar stats-filter-bar">
+      <label class="simple-label">
+        Département
+        <select id="statsDeptSelect">
+          <option value="Tous">Tous les départements</option>
+        </select>
+      </label>
+
+      <label class="simple-label">
+        Station du département
+        <select id="statsStationSelect">
+          <option value="">Sélectionner une station</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="panel stats-table-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Liste des stations du département</h2>
+          <p class="panel-note">Cette liste est mise à jour automatiquement selon le département choisi.</p>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Station</th>
+              <th>Département</th>
+              <th>Puissance</th>
+              <th>Points</th>
+              <th>Connecteur</th>
+              <th>Accès</th>
+            </tr>
+          </thead>
+          <tbody id="statsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <section class="stats-kpi-grid">
+      <div class="stat-card"><strong id="statNbStations">0</strong><span>Stations</span></div>
+      <div class="stat-card"><strong id="statTotalPoints">0</strong><span>Points de charge</span></div>
+      <div class="stat-card"><strong id="statAvgPower">0 kW</strong><span>Puissance moyenne</span></div>
+      <div class="stat-card"><strong id="statMaxPower">0 kW</strong><span>Puissance maximale</span></div>
+      <div class="stat-card"><strong id="statFreePercent">0 %</strong><span>Stations gratuites</span></div>
+      <div class="stat-card"><strong id="statMainConnector">-</strong><span>Connecteur principal</span></div>
+    </section>
+
+    <section class="stats-panel-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Puissance par station</h2>
+            <p class="panel-note">Représentation simple en barres.</p>
+          </div>
+        </div>
+        <div class="simple-bars" id="powerStatsChart"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Détail de la station choisie</h2>
+            <p class="panel-note">Les informations changent avec le menu déroulant.</p>
+          </div>
+        </div>
+        <div class="station-summary big-summary">
+          <p><span>Station</span><strong id="detailName">-</strong></p>
+          <p><span>ID</span><strong id="detailId">-</strong></p>
+          <p><span>Département</span><strong id="detailDept">-</strong></p>
+          <p><span>Connecteur</span><strong id="detailConnector">-</strong></p>
+          <p><span>Puissance</span><strong id="detailPower">-</strong></p>
+          <p><span>Accès</span><strong id="detailAccess">-</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-panel-grid bottom-panels">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Gratuit / Payant</h2>
+            <p class="panel-note">Pourcentage des stations du département.</p>
+          </div>
+        </div>
+        <div class="progress-list" id="accessStatsChart"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Types de connecteurs</h2>
+            <p class="panel-note">Répartition des prises présentes.</p>
+          </div>
+        </div>
+        <div class="progress-list" id="connectorStatsChart"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span><strong>⚡ IRVE Data Explorer</strong></span>
+      <span>Projet Big Data / IA / Web – FISE3 – 2026</span>
+      <span class="footer-tags">Statistiques · Département · Stations</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

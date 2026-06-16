@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clusters - IRVE Data Explorer</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icon">⚡</span>
+        <span>
+          <strong>IRVE Data Explorer</strong>
+          <small>Infrastructures de recharge</small>
+        </span>
+      </a>
+
+      <button class="menu-button" id="menuButton" type="button">☰</button>
+
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Accueil</a>
+        <a href="visualisation.html">Visualisation</a>
+        <a href="stats.html">Statistiques</a>
+      </nav>
+
+      <span class="header-badge">FISE3 – 2026</span>
+    </div>
+  </header>
+
+  <main class="container" id="clusterPage">
+    <div class="page-heading">
+      <h1>Prédiction des clusters</h1>
+      <p>Cette page affiche le résultat du clustering pour la station choisie dans la page Visualisation.</p>
+    </div>
+
+    <section class="page-layout">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Station choisie</h2>
+            <p class="panel-note">Résumé des informations utilisées pour le clustering.</p>
+          </div>
+          <a class="btn small" href="visualisation.html">Changer</a>
+        </div>
+
+        <div class="station-summary">
+          <p><span>Nom</span><strong id="summaryName">Station Opéra</strong></p>
+          <p><span>ID</span><strong id="summaryId">FR-75001-01</strong></p>
+          <p><span>Département</span><strong id="summaryDept">Paris (75)</strong></p>
+          <p><span>Connecteur</span><strong id="summaryConnector">Type 2</strong></p>
+          <p><span>Puissance</span><strong id="summaryPower">22 kW</strong></p>
+          <p><span>Points</span><strong id="summaryPoints">4</strong></p>
+          <p><span>Accès</span><strong id="summaryAccess">Gratuit</strong></p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Résultat cluster</h2>
+            <p class="panel-note">Deux méthodes sont comparées simplement.</p>
+          </div>
+          <span>DBSCAN + K-means</span>
+        </div>
+
+        <div class="result-grid two-cards">
+          <div class="method-card blue">
+            <h3>DBSCAN</h3>
+            <p>Méthode qui regroupe les stations selon la densité.</p>
+            <strong id="dbscanResult">Cluster urbain standard</strong>
+            <small id="dbscanComment">Résultat simulé.</small>
+          </div>
+
+          <div class="method-card green">
+            <h3>K-means</h3>
+            <p>Méthode qui sépare les stations en groupes proches.</p>
+            <strong id="kmeansResult">Groupe K2 : standard</strong>
+            <small id="kmeansComment">Résultat simulé.</small>
+          </div>
+        </div>
+
+        <div class="note-simple">
+          Ici, le résultat est une simulation front-end. Plus tard, le vrai modèle pourra être appelé depuis le dossier <strong>php/</strong>.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span><strong>⚡ IRVE Data Explorer</strong></span>
+      <span>Projet Big Data / IA / Web – FISE3 – 2026</span>
+      <span class="footer-tags">DBSCAN · K-means</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

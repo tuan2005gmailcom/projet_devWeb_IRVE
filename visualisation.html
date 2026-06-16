@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualisation - IRVE Data Explorer</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icon">⚡</span>
+        <span>
+          <strong>IRVE Data Explorer</strong>
+          <small>Infrastructures de recharge</small>
+        </span>
+      </a>
+
+      <button class="menu-button" id="menuButton" type="button">☰</button>
+
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Accueil</a>
+        <a class="active" href="visualisation.html">Visualisation</a>
+        <a href="stats.html">Statistiques</a>
+      </nav>
+
+      <span class="header-badge">FISE3 – 2026</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-heading">
+      <h1>Visualisation</h1>
+      <p>Choisissez une station dans la liste, puis lancez une prédiction. La carte affiche toutes les stations avec
+        leurs longitude et latitude.</p>
+    </div>
+
+    <section class="filter-bar">
+      <input id="searchInput" type="text" placeholder="Rechercher une station ou un identifiant…">
+      <select id="deptFilter">
+        <option value="Tous">Tous les départements</option>
+        <option value="Paris (75)">Paris (75)</option>
+        <option value="Rhône (69)">Rhône (69)</option>
+        <option value="Gironde (33)">Gironde (33)</option>
+        <option value="Bouches-du-Rhône (13)">Bouches-du-Rhône (13)</option>
+        <option value="Haute-Garonne (31)">Haute-Garonne (31)</option>
+        <option value="Alpes-Maritimes (06)">Alpes-Maritimes (06)</option>
+        <option value="Loire-Atlantique (44)">Loire-Atlantique (44)</option>
+        <option value="Bas-Rhin (67)">Bas-Rhin (67)</option>
+        <option value="Nord (59)">Nord (59)</option>
+        <option value="Seine-Maritime (76)">Seine-Maritime (76)</option>
+      </select>
+      <select id="connectorFilter">
+        <option value="Tous">Tous les connecteurs</option>
+        <option value="Type 2">Type 2</option>
+        <option value="CCS Combo 2">CCS Combo 2</option>
+        <option value="CHAdeMO">CHAdeMO</option>
+      </select>
+      <button class="btn small" id="resetFilters" type="button">↻ Réinitialiser</button>
+    </section>
+
+    <section class="visualisation-layout">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Points de recharge</h2>
+            <p class="panel-note">Liste déroulante : cochez une seule station.</p>
+          </div>
+          <span id="resultCount">10 résultats</span>
+        </div>
+
+        <div class="station-list" id="stationList">
+          <!-- Les stations sont créées automatiquement par JavaScript depuis data.js -->
+        </div>
+
+        <div class="prediction-actions">
+          <button class="btn small" id="goCluster" type="button">Prédire clusters</button>
+          <button class="btn small" id="goImplantation" type="button">Prédire implantation</button>
+          <button class="btn small" id="goPower" type="button">Prédire puissance</button>
+        </div>
+      </div>
+
+      <div class="panel map-zone">
+        <div class="panel-header">
+          <div>
+            <h2>Carte des stations</h2>
+            <p class="panel-note">Position calculée avec longitude et latitude.</p>
+          </div>
+          <span>Toutes les stations</span>
+        </div>
+
+        <div id="leafletMap" class="leaflet-map"></div>
+
+        <div class="map-legend">
+          <span><span class="badge blue">●</span> Station</span>
+          <span><span class="badge orange">●</span> Station sélectionnée</span>
+          <span>Fond de carte : OpenStreetMap</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span><strong>⚡ IRVE Data Explorer</strong></span>
+      <span>Projet Big Data / IA / Web – FISE3 – 2026</span>
+      <span class="footer-tags">Carte · Longitude · Latitude</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+
+</html>
