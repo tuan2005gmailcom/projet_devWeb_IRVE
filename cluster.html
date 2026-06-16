@@ -89,6 +89,22 @@
         </div>
       </div>
     </section>
+
+    <div class="note-simple" id="clusterStatus">
+      Chargement de la prédiction IA...
+    </div>
+
+    <div class="panel cluster-map-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Carte du cluster</h2>
+          <p class="panel-note">La couleur du marqueur correspond au cluster prédit.</p>
+        </div>
+        <span id="clusterColorBadge">-</span>
+      </div>
+
+      <iframe id="clusterMapFrame" class="cluster-map-frame"></iframe>
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -98,25 +114,7 @@
       <span class="footer-tags">DBSCAN · K-means</span>
     </div>
   </footer>
-
-  <div class="note-simple" id="clusterStatus">
-    Chargement de la prédiction IA...
-  </div>
-
-  <div class="panel cluster-map-panel">
-    <div class="panel-header">
-      <div>
-        <h2>Carte du cluster</h2>
-        <p class="panel-note">La couleur du marqueur correspond au cluster prédit.</p>
-      </div>
-      <span id="clusterColorBadge">-</span>
-    </div>
-
-    <iframe id="clusterMapFrame" class="cluster-map-frame"></iframe>
-  </div>
-
-  <script src="assets/js/data.js"></script>
-  <script src="assets/js/script.js"></script>
+  
   <script src="assets/js/cluster_ai_snippet.js"></script>
 </body>
 
