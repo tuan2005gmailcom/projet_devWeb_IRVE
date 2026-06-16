@@ -2,7 +2,7 @@
 define('DB_USER', "ct_dinh");
 define('DB_PASSWORD', "VFKMszL-QKmmRVIk");
 define('DB_NAME', "ct_dinh");
-define('DB_SERVER', "ct-dinh.projets.isen-ouest.info");
+define('DB_SERVER', "127.0.0.1");
 
 try {
     $pdo = new PDO(

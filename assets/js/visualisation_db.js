@@ -56,41 +56,58 @@ function renderStationList(data) {
   stationList.innerHTML = "";
   resultCount.textContent = `${data.length} résultats`;
 
+  if (data.length === 0) {
+    stationList.innerHTML = `
+      <p class="panel-note">Aucune station trouvée.</p>
+    `;
+    return;
+  }
+
+  const tableWrapper = document.createElement("div");
+  tableWrapper.className = "station-table-wrapper";
+
+  tableWrapper.innerHTML = `
+    <table class="station-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Station</th>
+          <th>Département</th>
+          <th>Connecteur</th>
+          <th>Puissance</th>
+          <th>Nbre_pdc</th>
+          <th>Accès</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  `;
+
+  const tbody = tableWrapper.querySelector("tbody");
+
   data.forEach(station => {
     const isSelected =
-      selectedStation && selectedStation.id_station === station.id_station;
+      selectedStation && String(selectedStation.id_station) === String(station.id_station);
 
-    const card = document.createElement("div");
-    card.className = isSelected ? "station-card selected" : "station-card";
+    const tr = document.createElement("tr");
+    tr.className = isSelected ? "selected-row" : "";
 
-    card.innerHTML = `
-  <label class="station-card-label">
-    <input type="radio" name="stationChoice" ${isSelected ? "checked" : ""}>
+    tr.innerHTML = `
+      <td>
+        <input type="radio" name="stationChoice" ${isSelected ? "checked" : ""}>
+      </td>
+      <td>
+        <strong>${station.nom_station}</strong>
+        <small>${station.adresse_station}</small>
+      </td>
+      <td>${station.nom_departement} (${station.code_departement})</td>
+      <td><span class="table-badge">${getConnector(station)}</span></td>
+      <td>${station.puissance_max ?? "N/A"} kW</td>
+      <td>${station.nbre_pdc}</td>
+      <td>${station.condition_acces}</td>
+    `;
 
-    <div class="station-card-content">
-      <div class="station-card-top">
-        <h3>${station.nom_station}</h3>
-        <span class="station-id">#${station.id_station}</span>
-      </div>
-
-      <p class="station-address">${station.adresse_station}</p>
-
-      <div class="station-tags">
-        <span>${station.nom_departement} (${station.code_departement})</span>
-        <span>${getConnector(station)}</span>
-        <span>${station.implantation_station}</span>
-      </div>
-
-      <div class="station-info-line">
-        <span><strong>Puissance :</strong> ${station.puissance_max ?? "N/A"} kW</span>
-        <span><strong>Nbre_pdc :</strong> ${station.nbre_pdc}</span>
-        <span><strong>Accès :</strong> ${station.condition_acces}</span>
-      </div>
-    </div>
-  </label>
-`;
-
-    card.addEventListener("click", () => {
+    tr.addEventListener("click", () => {
       selectedStation = station;
       renderStationList(data);
 
@@ -102,8 +119,10 @@ function renderStationList(data) {
       }
     });
 
-    stationList.appendChild(card);
+    tbody.appendChild(tr);
   });
+
+  stationList.appendChild(tableWrapper);
 }
 
 function applyFilters() {
@@ -177,9 +196,17 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const lat = selectedStation.consolidated_latitude;
-    const lon = selectedStation.consolidated_longitude;
+    const params = new URLSearchParams({
+      lat: selectedStation.consolidated_latitude,
+      lon: selectedStation.consolidated_longitude,
+      name: selectedStation.nom_station || "-",
+      id: selectedStation.id_station || "-",
+      dept: `${selectedStation.nom_departement} (${selectedStation.code_departement})`,
+      connector: getConnector(selectedStation),
+      power: `${selectedStation.puissance_max ?? "N/A"} kW`,
+      points: selectedStation.nbre_pdc || "-",
+      access: selectedStation.condition_acces || "-"
+    });
 
-    window.location.href = `cluster.html?lat=${lat}&lon=${lon}`;
+    window.location.href = `cluster.html?${params.toString()}`;
   });
-});

@@ -21,20 +21,36 @@ if (!is_numeric($lat) || !is_numeric($lon)) {
 }
 
 /*
-  Change this depending on your installation:
-  - Windows/Wamp can use: python
-  - Linux server often uses: python3
-  - Or full path like:
-    C:\\Users\\YourName\\AppData\\Local\\Programs\\Python\\Python312\\python.exe
+  Si tu es sur Linux serveur : python3
+  Si tu es sur Wamp Windows : python
 */
-$python = "python";
+$python = "python3";
 
-$script = __DIR__ . DIRECTORY_SEPARATOR . "clusters_map_web.py";
+$script = realpath(__DIR__ . "/../python/clusters_map_web.py");
+
+if ($script === false) {
+    echo json_encode([
+        "success" => false,
+        "error" => "Script Python introuvable."
+    ]);
+    exit;
+}
+
+$mapDir = __DIR__ . "/../maps";
+
+if (!is_dir($mapDir)) {
+    mkdir($mapDir, 0777, true);
+}
+
+$mapFileName = "cluster_map_" . time() . "_" . rand(1000, 9999) . ".html";
+$mapPath = realpath($mapDir) . DIRECTORY_SEPARATOR . $mapFileName;
+$mapUrl = "maps/" . $mapFileName;
 
 $command = escapeshellcmd($python) . " "
     . escapeshellarg($script)
     . " --lat " . escapeshellarg($lat)
     . " --lon " . escapeshellarg($lon)
+    . " --output " . escapeshellarg($mapPath)
     . " --json";
 
 $output = shell_exec($command);
@@ -42,7 +58,7 @@ $output = shell_exec($command);
 if ($output === null || trim($output) === "") {
     echo json_encode([
         "success" => false,
-        "error" => "Impossible d'exécuter le script Python. Vérifiez shell_exec(), Python et les fichiers .pkl."
+        "error" => "Le script Python ne retourne rien."
     ]);
     exit;
 }
@@ -54,9 +70,11 @@ if ($result === null) {
         "success" => false,
         "error" => "Réponse Python invalide.",
         "raw_output" => $output
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-echo json_encode($result);
+$result["map_url"] = $mapUrl;
+
+echo json_encode($result, JSON_UNESCAPED_UNICODE);
 ?>

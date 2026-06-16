@@ -34,7 +34,7 @@
   <main class="container" id="clusterPage">
     <div class="page-heading">
       <h1>Prédiction des clusters</h1>
-      <p>Cette page affiche le résultat du clustering pour la station choisie dans la page Visualisation.</p>
+      <p>Cette page affiche le cluster prédit et la carte de la station choisie dans la page Visualisation.</p>
     </div>
 
     <section class="page-layout">
@@ -42,79 +42,55 @@
         <div class="panel-header">
           <div>
             <h2>Station choisie</h2>
-            <p class="panel-note">Résumé des informations utilisées pour le clustering.</p>
+            <p class="panel-note">Résumé réel de la station sélectionnée.</p>
           </div>
           <a class="btn small" href="visualisation.html">Changer</a>
         </div>
 
         <div class="station-summary">
-          <p><span>Nom</span><strong id="summaryName">Station Opéra</strong></p>
-          <p><span>ID</span><strong id="summaryId">FR-75001-01</strong></p>
-          <p><span>Département</span><strong id="summaryDept">Paris (75)</strong></p>
-          <p><span>Connecteur</span><strong id="summaryConnector">Type 2</strong></p>
-          <p><span>Puissance</span><strong id="summaryPower">22 kW</strong></p>
-          <p><span>Points</span><strong id="summaryPoints">4</strong></p>
-          <p><span>Accès</span><strong id="summaryAccess">Gratuit</strong></p>
+          <p><span>Nom</span><strong id="summaryName">-</strong></p>
+          <p><span>ID</span><strong id="summaryId">-</strong></p>
+          <p><span>Département</span><strong id="summaryDept">-</strong></p>
+          <p><span>Connecteur</span><strong id="summaryConnector">-</strong></p>
+          <p><span>Puissance</span><strong id="summaryPower">-</strong></p>
+          <p><span>Points</span><strong id="summaryPoints">-</strong></p>
+          <p><span>Accès</span><strong id="summaryAccess">-</strong></p>
+          <p><span>Latitude</span><strong id="summaryLat">-</strong></p>
+          <p><span>Longitude</span><strong id="summaryLon">-</strong></p>
         </div>
       </div>
 
-      <div class="panel">
+      <div class="panel cluster-map-panel">
         <div class="panel-header">
           <div>
-            <h2>Résultat cluster</h2>
-            <p class="panel-note">Deux méthodes sont comparées simplement.</p>
+            <h2>Carte du cluster</h2>
+            <p class="panel-note">La couleur du marqueur correspond au cluster prédit par le modèle Python.</p>
           </div>
-          <span>DBSCAN + K-means</span>
+          <span id="clusterColorBadge" class="cluster-color-badge">-</span>
         </div>
 
-        <div class="result-grid two-cards">
-          <div class="method-card blue">
-            <h3>DBSCAN</h3>
-            <p>Méthode qui regroupe les stations selon la densité.</p>
-            <strong id="dbscanResult">Cluster urbain standard</strong>
-            <small id="dbscanComment">Résultat simulé.</small>
-          </div>
-
-          <div class="method-card green">
-            <h3>K-means</h3>
-            <p>Méthode qui sépare les stations en groupes proches.</p>
-            <strong id="kmeansResult">Groupe K2 : standard</strong>
-            <small id="kmeansComment">Résultat simulé.</small>
-          </div>
+        <div class="cluster-result-line">
+          <span>Cluster prédit</span>
+          <strong id="clusterNumber">Chargement...</strong>
         </div>
 
-        <div class="note-simple">
-          Ici, le résultat est une simulation front-end. Plus tard, le vrai modèle pourra être appelé depuis le dossier
-          <strong>php/</strong>.
+        <div class="note-simple" id="clusterStatus">
+          Chargement de la prédiction IA...
         </div>
+
+        <iframe id="clusterMapFrame" class="cluster-map-frame" title="Carte du cluster"></iframe>
       </div>
     </section>
-
-    <div class="note-simple" id="clusterStatus">
-      Chargement de la prédiction IA...
-    </div>
-
-    <div class="panel cluster-map-panel">
-      <div class="panel-header">
-        <div>
-          <h2>Carte du cluster</h2>
-          <p class="panel-note">La couleur du marqueur correspond au cluster prédit.</p>
-        </div>
-        <span id="clusterColorBadge">-</span>
-      </div>
-
-      <iframe id="clusterMapFrame" class="cluster-map-frame"></iframe>
-    </div>
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
       <span><strong>⚡ IRVE Data Explorer</strong></span>
       <span>Projet Big Data / IA / Web – FISE3 – 2026</span>
-      <span class="footer-tags">DBSCAN · K-means</span>
+      <span class="footer-tags">Clustering · Python · K-means</span>
     </div>
   </footer>
-  
+
   <script src="assets/js/cluster_ai_snippet.js"></script>
 </body>
 
