@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clusters - IRVE Data Explorer</title>
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 
 <body>
@@ -23,8 +24,8 @@
 
       <nav class="nav" id="mainNav">
         <a href="index.html">Accueil</a>
-        <a href="visualisation.html">Visualisation</a>
         <a href="stats.html">Statistiques</a>
+        <a href="visualisation.html">Visualisation</a>
       </nav>
 
       <span class="header-badge">FISE3 – 2026</span>
@@ -78,7 +79,7 @@
           Chargement de la prédiction IA...
         </div>
 
-        <iframe id="clusterMapFrame" class="cluster-map-frame" title="Carte du cluster"></iframe>
+        <div id="clusterLeafletMap" class="cluster-map-frame"></div>
       </div>
     </section>
   </main>
@@ -91,6 +92,7 @@
     </div>
   </footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="assets/js/cluster_ai_snippet.js"></script>
 </body>
 
