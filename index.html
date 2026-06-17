@@ -23,8 +23,8 @@
 
       <nav class="nav" id="mainNav">
         <a class="active" href="index.html">Accueil</a>
-        <a href="visualisation.html">Visualisation</a>
         <a href="stats.html">Statistiques</a>
+        <a href="visualisation.html">Visualisation</a>
       </nav>
 
       <span class="header-badge">FISE3 – 2026</span>
@@ -41,8 +41,8 @@
           puis lancer une prédiction de cluster, d’implantation ou de puissance.
         </p>
         <div class="hero-actions">
-          <a class="btn primary" href="visualisation.html">Explorer les stations →</a>
-          <a class="btn secondary" href="prediction.html">Voir une prédiction</a>
+          <a class="btn primary" href="visualisation.html">Voir les stations →</a>
+          <a class="btn secondary" href="stats.html">Consulter les statistiques</a>
         </div>
       </div>
       <div class="hero-image">
@@ -51,14 +51,17 @@
       </div>
     </section>
 
-    <section class="stats-grid">
-      <div class="stat-card"><strong>10</strong><span>Stations exemples</span></div>
-      <div class="stat-card"><strong>3</strong><span>Actions de prédiction</span></div>
-      <div class="stat-card"><strong>2</strong><span>Pages de résultats</span></div>
-      <div class="stat-card"><strong>0</strong><span>Framework React</span></div>
-    </section>
-
     <section class="cards-grid">
+      <article class="feature-card green">
+        <div class="feature-icon">📊</div>
+        <h3>Statistiques</h3>
+        <p>
+          Analysez les données des stations : nombre de points de charge,
+          types de connecteurs, puissance et répartition par département.
+        </p>
+        <a href="stats.html">Ouvrir →</a>
+      </article>
+      
       <article class="feature-card blue">
         <div class="feature-icon">🗺️</div>
         <h3>Visualisation</h3>
@@ -66,34 +69,15 @@
           latitude.</p>
         <a href="visualisation.html">Ouvrir →</a>
       </article>
-
-      <article class="feature-card green">
-        <div class="feature-icon">🧩</div>
-        <h3>Clusters</h3>
-        <p>Affiche le résultat du clustering avec deux méthodes : DBSCAN et K-means.</p>
-        <a href="cluster.html">Ouvrir →</a>
-      </article>
-
-      <article class="feature-card purple">
-        <div class="feature-icon">📍</div>
-        <h3>Implantation</h3>
-        <p>Affiche la prédiction de l’implantation avec Random Forest, XGBoost et Boost Gradient.</p>
-        <a href="prediction.html?type=implantation">Ouvrir →</a>
-      </article>
-
-      <article class="feature-card orange">
-        <div class="feature-icon">⚙️</div>
-        <h3>Puissance</h3>
-        <p>Affiche la prédiction de puissance avec Random Forest et Random Tree.</p>
-        <a href="prediction.html?type=puissance">Ouvrir →</a>
-      </article>
     </section>
 
     <section class="info-box">
-      <h2>Parcours utilisateur</h2>
+      <h2>Présentation du projet</h2>
       <p>
-        L’utilisateur commence sur la page Visualisation, sélectionne une station,
-        puis clique sur un bouton pour ouvrir la page de résultat adaptée.
+        IRVE Data Explorer est une application web dédiée à l’étude des infrastructures
+        de recharge pour véhicules électriques. Elle permet de visualiser les stations
+        sur une carte, d’explorer les données issues de la base MySQL et de consulter
+        des statistiques simples pour mieux comprendre la répartition des points de recharge.
       </p>
     </section>
   </main>

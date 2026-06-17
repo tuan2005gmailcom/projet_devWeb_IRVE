@@ -287,7 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
       id: selectedStation.id_station || "-",
       dept: getDeptLabel(selectedStation),
       connector: getConnectorText(selectedStation),
-      power: `${selectedStation.puissance_max ?? "N/A"} kW`,
       points: selectedStation.nbre_pdc || "-",
       access: selectedStation.condition_acces || "-"
     });
@@ -308,7 +307,6 @@ document.addEventListener("DOMContentLoaded", () => {
       id: selectedStation.id_station || "-",
       dept: getDeptLabel(selectedStation),
       connector: getConnectorText(selectedStation),
-      power: `${selectedStation.puissance_max ?? "N/A"} kW`,
       points: selectedStation.nbre_pdc || "-",
       access: selectedStation.condition_acces || "-",
 
@@ -350,7 +348,6 @@ document.addEventListener("DOMContentLoaded", () => {
       id: selectedStation.id_station || "-",
       dept: getDeptLabel(selectedStation),
       connector: getConnectorText(selectedStation),
-      power: `${selectedStation.puissance_max ?? "N/A"} kW`,
       points: selectedStation.nbre_pdc || "-",
       access: selectedStation.condition_acces || "-",
 
