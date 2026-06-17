@@ -26,7 +26,7 @@ if (!is_numeric($lat) || !is_numeric($lon)) {
 */
 $python = "python3";
 
-$script = realpath(__DIR__ . "/../python/clusters_map_web.py");
+$script = realpath(__DIR__ . "/../python/clustering/clusters_map_web.py");
 
 if ($script === false) {
     echo json_encode([

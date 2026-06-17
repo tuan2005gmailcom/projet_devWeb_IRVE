@@ -43,22 +43,9 @@
       <input id="searchInput" type="text" placeholder="Rechercher une station ou un identifiant…">
       <select id="deptFilter">
         <option value="Tous">Tous les départements</option>
-        <option value="Paris (75)">Paris (75)</option>
-        <option value="Rhône (69)">Rhône (69)</option>
-        <option value="Gironde (33)">Gironde (33)</option>
-        <option value="Bouches-du-Rhône (13)">Bouches-du-Rhône (13)</option>
-        <option value="Haute-Garonne (31)">Haute-Garonne (31)</option>
-        <option value="Alpes-Maritimes (06)">Alpes-Maritimes (06)</option>
-        <option value="Loire-Atlantique (44)">Loire-Atlantique (44)</option>
-        <option value="Bas-Rhin (67)">Bas-Rhin (67)</option>
-        <option value="Nord (59)">Nord (59)</option>
-        <option value="Seine-Maritime (76)">Seine-Maritime (76)</option>
       </select>
       <select id="connectorFilter">
         <option value="Tous">Tous les connecteurs</option>
-        <option value="Type 2">Type 2</option>
-        <option value="CCS Combo 2">CCS Combo 2</option>
-        <option value="CHAdeMO">CHAdeMO</option>
       </select>
       <button class="btn small" id="resetFilters" type="button">↻ Réinitialiser</button>
     </section>
@@ -68,13 +55,13 @@
         <div class="panel-header">
           <div>
             <h2>Points de recharge</h2>
-            <p class="panel-note">Liste déroulante : cochez une seule station.</p>
+            <p class="panel-note">Tableau des stations : cliquez sur une ligne pour choisir une station.</p>
           </div>
-          <span id="resultCount">10 résultats</span>
+          <span id="resultCount">Chargement...</span>
         </div>
 
         <div class="station-list" id="stationList">
-           <!-- Les stations sont chargées depuis MySQL par api_stations.php -->
+          <!-- Les stations sont chargées depuis MySQL par api_stations.php -->
         </div>
 
         <div class="prediction-actions">

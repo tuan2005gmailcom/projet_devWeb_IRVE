@@ -18,6 +18,8 @@ try {
             d.code_departement,
             d.nom_departement,
 
+            MAX(p.gratuit) AS gratuit,
+            MAX(p.tarification) AS tarification,
             MAX(p.puissance_nominale) AS puissance_max,
 
             MAX(p.prise_type_ef) AS has_ef,

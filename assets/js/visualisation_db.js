@@ -3,13 +3,64 @@ let selectedStation = null;
 let map;
 let markersLayer;
 
-function getConnector(station) {
-  if (Number(station.has_combo_ccs) === 1) return "CCS Combo 2";
-  if (Number(station.has_type_2) === 1) return "Type 2";
-  if (Number(station.has_chademo) === 1) return "CHAdeMO";
-  if (Number(station.has_ef) === 1) return "EF";
-  if (Number(station.has_autre) === 1) return "Autre";
-  return "Non renseigné";
+function getConnectors(station) {
+  const connectors = [];
+
+  if (Number(station.has_combo_ccs) === 1) connectors.push("CCS Combo 2");
+  if (Number(station.has_type_2) === 1) connectors.push("Type 2");
+  if (Number(station.has_chademo) === 1) connectors.push("CHAdeMO");
+  if (Number(station.has_ef) === 1) connectors.push("EF");
+  if (Number(station.has_autre) === 1) connectors.push("Autre");
+
+  return connectors.length > 0 ? connectors : ["Non renseigné"];
+}
+
+function getConnectorText(station) {
+  return getConnectors(station).join(", ");
+}
+
+function getDeptLabel(station) {
+  return `${station.nom_departement} (${station.code_departement})`;
+}
+
+function fillFiltersFromDatabase() {
+  const deptFilter = document.getElementById("deptFilter");
+  const connectorFilter = document.getElementById("connectorFilter");
+
+  const departments = [...new Set(stations.map(getDeptLabel))].sort();
+
+  const connectors = [
+    ...new Set(
+      stations.flatMap(station => getConnectors(station))
+    )
+  ].sort();
+
+  deptFilter.innerHTML = `<option value="Tous">Tous les départements</option>`;
+  departments.forEach(dept => {
+    const option = document.createElement("option");
+    option.value = dept;
+    option.textContent = dept;
+    deptFilter.appendChild(option);
+  });
+
+  connectorFilter.innerHTML = `<option value="Tous">Tous les connecteurs</option>`;
+  connectors.forEach(connector => {
+    const option = document.createElement("option");
+    option.value = connector;
+    option.textContent = connector;
+    connectorFilter.appendChild(option);
+  });
+}
+
+function initMenu() {
+  const menuButton = document.getElementById("menuButton");
+  const mainNav = document.getElementById("mainNav");
+
+  if (menuButton && mainNav) {
+    menuButton.addEventListener("click", () => {
+      mainNav.classList.toggle("open");
+    });
+  }
 }
 
 function initMap() {
@@ -25,18 +76,30 @@ function initMap() {
 function loadStationsOnMap(data) {
   markersLayer.clearLayers();
 
+  const bounds = [];
+
   data.forEach(station => {
     const lat = Number(station.consolidated_latitude);
     const lon = Number(station.consolidated_longitude);
 
     if (isNaN(lat) || isNaN(lon)) return;
 
-    const marker = L.marker([lat, lon]).addTo(markersLayer);
+    const isSelected =
+      selectedStation && String(selectedStation.id_station) === String(station.id_station);
+
+    const color = isSelected ? "#f97316" : "#2563eb";
+
+    const marker = L.circleMarker([lat, lon], {
+      radius: isSelected ? 9 : 6,
+      color: color,
+      fillColor: color,
+      fillOpacity: 0.85
+    }).addTo(markersLayer);
 
     marker.bindPopup(`
       <strong>${station.nom_station}</strong><br>
-      Département : ${station.nom_departement} (${station.code_departement})<br>
-      Connecteur : ${getConnector(station)}<br>
+      Département : ${getDeptLabel(station)}<br>
+      Connecteur : ${getConnectorText(station)}<br>
       Puissance max : ${station.puissance_max ?? "N/A"} kW<br>
       Nbre_pdc : ${station.nbre_pdc}<br>
       Accès : ${station.condition_acces}
@@ -45,8 +108,15 @@ function loadStationsOnMap(data) {
     marker.on("click", () => {
       selectedStation = station;
       renderStationList(data);
+      loadStationsOnMap(data);
     });
+
+    bounds.push([lat, lon]);
   });
+
+  if (bounds.length > 0) {
+    map.fitBounds(bounds, { padding: [25, 25] });
+  }
 }
 
 function renderStationList(data) {
@@ -57,9 +127,7 @@ function renderStationList(data) {
   resultCount.textContent = `${data.length} résultats`;
 
   if (data.length === 0) {
-    stationList.innerHTML = `
-      <p class="panel-note">Aucune station trouvée.</p>
-    `;
+    stationList.innerHTML = `<p class="panel-note">Aucune station trouvée.</p>`;
     return;
   }
 
@@ -97,19 +165,20 @@ function renderStationList(data) {
         <input type="radio" name="stationChoice" ${isSelected ? "checked" : ""}>
       </td>
       <td>
-        <strong>${station.nom_station}</strong>
-        <small>${station.adresse_station}</small>
+        <strong>${station.nom_station || "-"}</strong>
+        <small>${station.adresse_station || "-"}</small>
       </td>
-      <td>${station.nom_departement} (${station.code_departement})</td>
-      <td><span class="table-badge">${getConnector(station)}</span></td>
+      <td>${getDeptLabel(station)}</td>
+      <td><span class="table-badge">${getConnectorText(station)}</span></td>
       <td>${station.puissance_max ?? "N/A"} kW</td>
-      <td>${station.nbre_pdc}</td>
-      <td>${station.condition_acces}</td>
+      <td>${station.nbre_pdc ?? "-"}</td>
+      <td>${station.condition_acces || "-"}</td>
     `;
 
     tr.addEventListener("click", () => {
       selectedStation = station;
       renderStationList(data);
+      loadStationsOnMap(data);
 
       const lat = Number(station.consolidated_latitude);
       const lon = Number(station.consolidated_longitude);
@@ -131,19 +200,19 @@ function applyFilters() {
   const connectorValue = document.getElementById("connectorFilter").value;
 
   const filtered = stations.filter(station => {
-    const connector = getConnector(station);
-    const deptLabel = `${station.nom_departement} (${station.code_departement})`;
+    const connectors = getConnectors(station);
+    const deptLabel = getDeptLabel(station);
 
     const matchSearch =
-      station.nom_station.toLowerCase().includes(searchValue) ||
-      station.adresse_station.toLowerCase().includes(searchValue) ||
-      String(station.id_station).includes(searchValue);
+      String(station.nom_station || "").toLowerCase().includes(searchValue) ||
+      String(station.adresse_station || "").toLowerCase().includes(searchValue) ||
+      String(station.id_station || "").includes(searchValue);
 
     const matchDept =
       deptValue === "Tous" || deptValue === deptLabel;
 
     const matchConnector =
-      connectorValue === "Tous" || connectorValue === connector;
+      connectorValue === "Tous" || connectors.includes(connectorValue);
 
     return matchSearch && matchDept && matchConnector;
   });
@@ -153,27 +222,41 @@ function applyFilters() {
 }
 
 async function loadStationsFromDatabase() {
+  const stationList = document.getElementById("stationList");
+  const resultCount = document.getElementById("resultCount");
+
   try {
+    stationList.innerHTML = `<p class="panel-note">Chargement des stations...</p>`;
+    resultCount.textContent = "Chargement...";
+
     const response = await fetch("php/api_stations.php");
-    const data = await response.json();
+    const text = await response.text();
+
+    console.log("Réponse API :", text);
+
+    const data = JSON.parse(text);
 
     if (!data.success) {
-      alert("Erreur API : " + data.error);
+      stationList.innerHTML = `<p class="panel-note">Erreur API : ${data.error}</p>`;
+      resultCount.textContent = "Erreur";
       return;
     }
 
     stations = data.stations;
 
+    fillFiltersFromDatabase();
     renderStationList(stations);
     loadStationsOnMap(stations);
 
   } catch (error) {
     console.error(error);
-    alert("Erreur pendant le chargement des données MySQL.");
+    stationList.innerHTML = `<p class="panel-note">Erreur pendant le chargement des données MySQL. Regarde F12 > Console.</p>`;
+    resultCount.textContent = "Erreur";
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  initMenu();
   initMap();
   loadStationsFromDatabase();
 
@@ -188,6 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedStation = null;
     renderStationList(stations);
     loadStationsOnMap(stations);
+    map.setView([46.6, 2.5], 6);
   });
 
   document.getElementById("goCluster").addEventListener("click", () => {
@@ -201,8 +285,8 @@ document.addEventListener("DOMContentLoaded", () => {
       lon: selectedStation.consolidated_longitude,
       name: selectedStation.nom_station || "-",
       id: selectedStation.id_station || "-",
-      dept: `${selectedStation.nom_departement} (${selectedStation.code_departement})`,
-      connector: getConnector(selectedStation),
+      dept: getDeptLabel(selectedStation),
+      connector: getConnectorText(selectedStation),
       power: `${selectedStation.puissance_max ?? "N/A"} kW`,
       points: selectedStation.nbre_pdc || "-",
       access: selectedStation.condition_acces || "-"
@@ -210,3 +294,88 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.location.href = `cluster.html?${params.toString()}`;
   });
+
+  document.getElementById("goImplantation").addEventListener("click", () => {
+    if (!selectedStation) {
+      alert("Choisissez une station d'abord.");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      type: "implantation",
+
+      name: selectedStation.nom_station || "-",
+      id: selectedStation.id_station || "-",
+      dept: getDeptLabel(selectedStation),
+      connector: getConnectorText(selectedStation),
+      power: `${selectedStation.puissance_max ?? "N/A"} kW`,
+      points: selectedStation.nbre_pdc || "-",
+      access: selectedStation.condition_acces || "-",
+
+      lat: selectedStation.consolidated_latitude || 0,
+      lon: selectedStation.consolidated_longitude || 0,
+
+      nbre_pdc: selectedStation.nbre_pdc || 0,
+      puissance_nominale: selectedStation.puissance_max || 0,
+
+      consolidated_latitude: selectedStation.consolidated_latitude || 0,
+      consolidated_longitude: selectedStation.consolidated_longitude || 0,
+
+      prise_type_ef: selectedStation.has_ef || 0,
+      prise_type_2: selectedStation.has_type_2 || 0,
+      prise_type_combo_ccs: selectedStation.has_combo_ccs || 0,
+      prise_type_chademo: selectedStation.has_chademo || 0,
+      prise_type_autre: selectedStation.has_autre || 0,
+
+      gratuit: selectedStation.gratuit ?? selectedStation.is_gratuit ?? 0,
+      station_deux_roues: selectedStation.station_deux_roues || 0,
+      condition_acces: selectedStation.condition_acces || "unknown",
+      tarification: selectedStation.tarification || "",
+      horaires: selectedStation.horaires || ""
+    });
+
+    window.location.href = `implantation.html?${params.toString()}`;
+  });
+
+  document.getElementById("goPower").addEventListener("click", () => {
+    if (!selectedStation) {
+      alert("Choisissez une station d'abord.");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      type: "puissance",
+
+      name: selectedStation.nom_station || "-",
+      id: selectedStation.id_station || "-",
+      dept: getDeptLabel(selectedStation),
+      connector: getConnectorText(selectedStation),
+      power: `${selectedStation.puissance_max ?? "N/A"} kW`,
+      points: selectedStation.nbre_pdc || "-",
+      access: selectedStation.condition_acces || "-",
+
+      implantation_station: selectedStation.implantation_station || "unknown",
+      condition_acces: selectedStation.condition_acces || "unknown",
+      nbre_pdc: selectedStation.nbre_pdc || 0,
+
+      prise_type_ef: selectedStation.has_ef || 0,
+      prise_type_2: selectedStation.has_type_2 || 0,
+      prise_type_combo_ccs: selectedStation.has_combo_ccs || 0,
+      prise_type_chademo: selectedStation.has_chademo || 0,
+      prise_type_autre: selectedStation.has_autre || 0,
+
+      station_deux_roues: selectedStation.station_deux_roues || 0,
+
+      consolidated_latitude: selectedStation.consolidated_latitude || 0,
+      consolidated_longitude: selectedStation.consolidated_longitude || 0,
+      lat: selectedStation.consolidated_latitude || 0,
+      lon: selectedStation.consolidated_longitude || 0,
+
+      horaires: selectedStation.horaires || "",
+      tarification: selectedStation.tarification || "",
+      gratuit: selectedStation.gratuit ?? selectedStation.is_gratuit ?? 0
+    });
+
+    window.location.href = `puissance.html?${params.toString()}`;
+  });
+});

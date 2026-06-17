@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prédiction implantation - IRVE Data Explorer</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icon">⚡</span>
+        <span>
+          <strong>IRVE Data Explorer</strong>
+          <small>Infrastructures de recharge</small>
+        </span>
+      </a>
+
+      <button class="menu-button" id="menuButton" type="button">☰</button>
+
+      <nav class="nav" id="mainNav">
+        <a href="index.html">Accueil</a>
+        <a href="visualisation.html">Visualisation</a>
+        <a href="stats.html">Statistiques</a>
+      </nav>
+
+      <span class="header-badge">FISE3 – 2026</span>
+    </div>
+  </header>
+
+  <main class="container" id="predictionPage">
+    <div class="page-heading">
+      <h1>Prédiction de l’implantation</h1>
+      <p>Cette page appelle le modèle Python entraîné pour prédire le type d’implantation de la station choisie.</p>
+    </div>
+
+    <section class="page-layout">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Station choisie</h2>
+            <p class="panel-note">Données envoyées au modèle IA.</p>
+          </div>
+          <a class="btn small" href="visualisation.html">Changer</a>
+        </div>
+
+        <div class="station-summary">
+          <p><span>Nom</span><strong id="summaryName">-</strong></p>
+          <p><span>ID</span><strong id="summaryId">-</strong></p>
+          <p><span>Département</span><strong id="summaryDept">-</strong></p>
+          <p><span>Connecteur</span><strong id="summaryConnector">-</strong></p>
+          <p><span>Puissance</span><strong id="summaryPower">-</strong></p>
+          <p><span>Points</span><strong id="summaryPoints">-</strong></p>
+          <p><span>Accès</span><strong id="summaryAccess">-</strong></p>
+        </div>
+      </div>
+
+      <div class="panel prediction-result-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Résultat du modèle</h2>
+            <p class="panel-note">Prédiction calculée avec le modèle Random Forest sauvegardé.</p>
+          </div>
+          <span class="badge blue" id="predictionStatusBadge">Chargement</span>
+        </div>
+
+        <div class="main-result implantation-main-card">
+          <span>Implantation prédite</span>
+          <strong id="implantationMainResult">Chargement...</strong>
+        </div>
+
+        <div class="note-simple" id="implantationStatus">
+          Appel du modèle Python en cours...
+        </div>
+
+        <div class="sub-panel prediction-proba-panel">
+          <h3>Probabilités par classe</h3>
+          <p class="panel-note">Affichage seulement si le modèle retourne predict_proba.</p>
+          <div class="progress-list" id="probabilityList">
+            <p class="panel-note">Chargement...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span><strong>⚡ IRVE Data Explorer</strong></span>
+      <span>Projet Big Data / IA / Web – FISE3 – 2026</span>
+      <span class="footer-tags">Random Forest · Implantation · Python</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/prediction_implantation.js"></script>
+</body>
+
+</html>
