@@ -23,6 +23,80 @@ function getDeptLabel(station) {
   return `${station.nom_departement} (${station.code_departement})`;
 }
 
+function safeValue(value, fallback = "Non précisé") {
+  if (value === null || value === undefined || String(value).trim() === "") {
+    return fallback;
+  }
+  return String(value).trim();
+}
+
+function formatCoordinates(station) {
+  const lat = Number(station.consolidated_latitude);
+  const lon = Number(station.consolidated_longitude);
+
+  if (isNaN(lat) || isNaN(lon)) {
+    return "Non précisées";
+  }
+
+  return `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+}
+
+function formatTarification(station) {
+  const tarification = safeValue(station.tarification, "");
+
+  if (!tarification) {
+    return "Non précisée";
+  }
+
+  return tarification.length > 70
+    ? `${tarification.slice(0, 70)}...`
+    : tarification;
+}
+
+function buildStationPopup(station) {
+  return `
+    <div class="station-map-popup">
+      <strong>${safeValue(station.nom_station)}</strong>
+      <span class="popup-subtitle">Statistiques générales</span>
+
+      <div class="popup-stat-line">
+        <span>Département</span>
+        <b>${getDeptLabel(station)}</b>
+      </div>
+
+      <div class="popup-stat-line">
+        <span>Implantation</span>
+        <b>${safeValue(station.implantation_station)}</b>
+      </div>
+
+      <div class="popup-stat-line">
+        <span>Points de charge</span>
+        <b>${station.nbre_pdc ?? "-"}</b>
+      </div>
+
+      <div class="popup-stat-line">
+        <span>Connecteurs</span>
+        <b>${getConnectorText(station)}</b>
+      </div>
+
+      <div class="popup-stat-line">
+        <span>Accès</span>
+        <b>${safeValue(station.condition_acces)}</b>
+      </div>
+
+      <div class="popup-stat-line">
+        <span>Tarification</span>
+        <b>${formatTarification(station)}</b>
+      </div>
+
+      <div class="popup-stat-line">
+        <span>Coordonnées</span>
+        <b>${formatCoordinates(station)}</b>
+      </div>
+    </div>
+  `;
+}
+
 function fillFiltersFromDatabase() {
   const deptFilter = document.getElementById("deptFilter");
   const connectorFilter = document.getElementById("connectorFilter");
@@ -73,10 +147,11 @@ function initMap() {
   markersLayer = L.layerGroup().addTo(map);
 }
 
-function loadStationsOnMap(data) {
+function loadStationsOnMap(data, fitMap = true, openSelectedPopup = false) {
   markersLayer.clearLayers();
 
   const bounds = [];
+  let selectedMarker = null;
 
   data.forEach(station => {
     const lat = Number(station.consolidated_latitude);
@@ -96,26 +171,33 @@ function loadStationsOnMap(data) {
       fillOpacity: 0.85
     }).addTo(markersLayer);
 
-    marker.bindPopup(`
-      <strong>${station.nom_station}</strong><br>
-      Département : ${getDeptLabel(station)}<br>
-      Connecteur : ${getConnectorText(station)}<br>
-      Puissance max : ${station.puissance_max ?? "N/A"} kW<br>
-      Nbre_pdc : ${station.nbre_pdc}<br>
-      Accès : ${station.condition_acces}
-    `);
+    marker.bindPopup(buildStationPopup(station), {
+      maxWidth: 340,
+      minWidth: 260
+    });
+
+    if (isSelected) {
+      selectedMarker = marker;
+    }
 
     marker.on("click", () => {
       selectedStation = station;
       renderStationList(data);
-      loadStationsOnMap(data);
+      loadStationsOnMap(data, false, true);
+      map.setView([lat, lon], Math.max(map.getZoom(), 13));
     });
 
     bounds.push([lat, lon]);
   });
 
-  if (bounds.length > 0) {
+  if (bounds.length > 0 && fitMap) {
     map.fitBounds(bounds, { padding: [25, 25] });
+  }
+
+  if (openSelectedPopup && selectedMarker) {
+    setTimeout(() => {
+      selectedMarker.openPopup();
+    }, 80);
   }
 }
 
@@ -142,7 +224,6 @@ function renderStationList(data) {
           <th>Station</th>
           <th>Département</th>
           <th>Connecteur</th>
-          <th>Puissance</th>
           <th>Nbre_pdc</th>
           <th>Accès</th>
         </tr>
@@ -170,7 +251,6 @@ function renderStationList(data) {
       </td>
       <td>${getDeptLabel(station)}</td>
       <td><span class="table-badge">${getConnectorText(station)}</span></td>
-      <td>${station.puissance_max ?? "N/A"} kW</td>
       <td>${station.nbre_pdc ?? "-"}</td>
       <td>${station.condition_acces || "-"}</td>
     `;
@@ -178,7 +258,7 @@ function renderStationList(data) {
     tr.addEventListener("click", () => {
       selectedStation = station;
       renderStationList(data);
-      loadStationsOnMap(data);
+      loadStationsOnMap(data, false, true);
 
       const lat = Number(station.consolidated_latitude);
       const lon = Number(station.consolidated_longitude);

@@ -121,7 +121,7 @@ function renderTable(data) {
       <td>${station.puissance_max ?? "N/A"} kW</td>
       <td>${station.nbre_pdc}</td>
       <td>${getConnector(station)}</td>
-      <td>${Number(station.is_gratuit) === 1 ? "Gratuit" : "Payant / non précisé"}</td>
+      <td>${station.condition_acces || "Non précisé"}</td>
     `;
 
     tr.addEventListener("click", () => {
@@ -147,8 +147,13 @@ function renderKpis(data) {
 
   const maxPower = powers.length ? Math.max(...powers) : 0;
 
-  const freeStations = data.filter(s => Number(s.is_gratuit) === 1).length;
-  const freePercent = nbStations ? (freeStations / nbStations) * 100 : 0;
+  const accessLibreStations = data.filter(s =>
+    String(s.condition_acces || "").toLowerCase().includes("libre")
+  ).length;
+
+  const accessLibrePercent = nbStations
+    ? (accessLibreStations / nbStations) * 100
+    : 0;
 
   const connectorCounts = countConnectors(data);
   const mainConnector = Object.entries(connectorCounts)
@@ -158,7 +163,7 @@ function renderKpis(data) {
   document.getElementById("statTotalPoints").textContent = totalPoints;
   document.getElementById("statAvgPower").textContent = `${avgPower.toFixed(1)} kW`;
   document.getElementById("statMaxPower").textContent = `${maxPower.toFixed(1)} kW`;
-  document.getElementById("statFreePercent").textContent = `${freePercent.toFixed(0)} %`;
+  document.getElementById("statAccessLibrePercent").textContent = `${accessLibrePercent.toFixed(0)} %`;
   document.getElementById("statMainConnector").textContent = mainConnector ? mainConnector[0] : "-";
 }
 
@@ -169,7 +174,7 @@ function renderStationDetail(station) {
   document.getElementById("detailConnector").textContent = getConnector(station);
   document.getElementById("detailPower").textContent = `${station.puissance_max ?? "N/A"} kW`;
   document.getElementById("detailAccess").textContent =
-    Number(station.is_gratuit) === 1 ? "Gratuit" : "Payant / non précisé";
+    station.condition_acces || "Non précisé";
 }
 
 function clearStationDetail() {
@@ -220,12 +225,22 @@ function renderAccessChart(data) {
   chart.innerHTML = "";
 
   const total = data.length || 1;
-  const free = data.filter(s => Number(s.is_gratuit) === 1).length;
-  const paid = data.length - free;
+
+  const libre = data.filter(s =>
+    String(s.condition_acces || "").toLowerCase().includes("libre")
+  ).length;
+
+  const reserve = data.filter(s => {
+    const access = String(s.condition_acces || "").toLowerCase();
+    return access.includes("réserv") || access.includes("reserv");
+  }).length;
+
+  const other = data.length - libre - reserve;
 
   const rows = [
-    { label: "Gratuit", value: free },
-    { label: "Payant / non précisé", value: paid }
+    { label: "Accès libre", value: libre },
+    { label: "Accès réservé", value: reserve },
+    { label: "Non précisé", value: other }
   ];
 
   rows.forEach(item => {
