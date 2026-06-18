@@ -46,23 +46,25 @@ function renderPowerModelResults(models, unit = "kW") {
 
   container.innerHTML = "";
 
-  Object.entries(models).forEach(([modelName, result]) => {
-    const row = document.createElement("div");
+  Object.entries(models)
+    .filter(([modelName]) => modelName !== "Linear Regression")
+    .forEach(([modelName, result]) => {
+      const row = document.createElement("div");
 
-    if (result.success === false) {
-      row.innerHTML = `
+      if (result.success === false) {
+        row.innerHTML = `
         <span>${modelName}</span>
         <strong>Erreur</strong>
       `;
-    } else {
-      row.innerHTML = `
+      } else {
+        row.innerHTML = `
         <span>${modelName}</span>
         <strong>${formatKw(result.prediction, result.unit || unit)}</strong>
       `;
-    }
+      }
 
-    container.appendChild(row);
-  });
+      container.appendChild(row);
+    });
 }
 
 // Appelle le fichier PHP qui lance les modèles Python de puissance.
@@ -80,7 +82,6 @@ async function loadPowerPrediction() {
   const rfResult = document.getElementById("rfPowerResult");
   const unitResult = document.getElementById("powerUnitResult");
   const averageResult = document.getElementById("averagePowerResult");
-  const methodResult = document.getElementById("finalPowerMethodResult");
   const status = document.getElementById("powerStatus");
   const badge = document.getElementById("powerStatusBadge");
 
@@ -88,7 +89,6 @@ async function loadPowerPrediction() {
     if (mainResult) mainResult.textContent = "Chargement...";
     if (rfResult) rfResult.textContent = "Chargement...";
     if (averageResult) averageResult.textContent = "Chargement...";
-    if (methodResult) methodResult.textContent = "-";
     if (status) status.textContent = "Appel des modèles Python...";
     if (badge) badge.textContent = "En cours";
 
@@ -104,7 +104,6 @@ async function loadPowerPrediction() {
       if (mainResult) mainResult.textContent = "Erreur";
       if (rfResult) rfResult.textContent = "Erreur";
       if (averageResult) averageResult.textContent = "Erreur";
-      if (methodResult) methodResult.textContent = "Erreur";
       if (status) {
         status.textContent = "Erreur : " + (data.details || data.error || "Réponse invalide.");
       }
@@ -127,16 +126,26 @@ async function loadPowerPrediction() {
     }
 
     if (unitResult) unitResult.textContent = unit;
-    if (averageResult) averageResult.textContent = formatKw(data.average_prediction, unit);
-    if (methodResult) methodResult.textContent = data.final_method || "-";
+    // On ne garde que deux modèles: Random Forest et Random Tree
+    const rfPrediction = Number(data.models?.["Random Forest"]?.prediction);
+    const dtPrediction = Number(data.models?.["Decision Tree"]?.prediction);
+
+    let averageTwoModels = null;
+
+    if (!Number.isNaN(rfPrediction) && !Number.isNaN(dtPrediction)) {
+      averageTwoModels = (rfPrediction + dtPrediction) / 2;
+    }
+
+    if (averageResult) {
+      averageResult.textContent = averageTwoModels !== null
+        ? formatKw(averageTwoModels, unit)
+        : "-";
+    }
 
     renderPowerModelResults(data.models, unit);
 
     if (status) {
-      status.innerHTML = `
-        Résultat calculé : puissance prédite = <strong>${finalText}</strong>.
-        Méthode finale : <strong>${data.final_method || "-"}</strong>.
-      `;
+      status.style.display = "none";
     }
 
     if (badge) badge.textContent = "Terminé";
