@@ -24,9 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 MODEL_FILES = {
     "Random Forest": BASE_DIR / "model_implantation_randomforest.pkl",
-    "Gradient Boosting": BASE_DIR / "model_implantation_gradientboost.pkl",
     "XGBoost": BASE_DIR / "model_implantation_XGBoost.pkl",
-    "Logistic Regression": BASE_DIR / "model_implantation_logisticregression.pkl",
 }
 
 ENCODER_FILE = BASE_DIR / "label_encoder_implantation.pkl"
@@ -207,62 +205,66 @@ X = X.astype(float)
 
 
 # =========================
-# 6. Prédire avec tous les modèles
+# 6. Prédire avec les 3 modèles
 # =========================
 
 try:
     model_results = {}
     predictions = []
 
+    # On initialise toutes les classes connues par l'encodeur.
+    # Comme ça, la probabilité finale prend bien en compte les mêmes classes pour tous les modèles.
+    all_classes = [str(label) for label in label_encoder.classes_]
+    probability_sums = {label: 0.0 for label in all_classes}
+    models_with_proba = 0
+
     for model_name, model in models.items():
         raw_prediction = model.predict(X)[0]
         prediction_label = decode_prediction(raw_prediction)
         probabilities = get_probabilities(model, X)
 
-        model_results[model_name] = {"prediction": prediction_label}
+        model_results[model_name] = {
+            "prediction": prediction_label
+        }
 
         if probabilities is not None:
             model_results[model_name]["probabilities"] = probabilities
+            models_with_proba += 1
+
+            # On ajoute les probabilités du modèle pour chaque classe.
+            # Si une classe n'est pas retournée par un modèle, on considère sa probabilité comme 0.
+            for class_label in all_classes:
+                probability_sums[class_label] += float(probabilities.get(class_label, 0))
 
         predictions.append(prediction_label)
 
-    vote_counts = Counter(predictions)
+    # Probabilités finales = moyenne des probabilités des modèles utilisés.
+    # Ici, les modèles utilisés sont Random Forest, Gradient Boosting et XGBoost.
+    if models_with_proba > 0:
+        final_probabilities = {
+            class_label: float(round(probability_sums[class_label] / models_with_proba, 4))
+            for class_label in all_classes
+        }
 
-    priority = [
-        "Random Forest",
-        "Gradient Boosting",
-        "XGBoost",
-        "Logistic Regression",
-    ]
+        # La prédiction finale est la classe avec la probabilité moyenne la plus élevée.
+        final_prediction = max(final_probabilities, key=final_probabilities.get)
 
-    max_votes = max(vote_counts.values())
-    candidates = [label for label, count in vote_counts.items() if count == max_votes]
-    final_prediction = candidates[0]
-
-    for model_name in priority:
-        if model_name in model_results:
-            candidate_prediction = model_results[model_name]["prediction"]
-            if candidate_prediction in candidates:
-                final_prediction = candidate_prediction
-                break
+    else:
+        # Sécurité si aucun modèle ne retourne predict_proba.
+        vote_counts = Counter(predictions)
+        final_prediction = vote_counts.most_common(1)[0][0]
+        final_probabilities = {}
 
     result = {
         "success": True,
         "prediction_implantation_station": final_prediction,
         "final_prediction": final_prediction,
-        "vote_counts": dict(vote_counts),
         "models": model_results,
+        "probabilities": final_probabilities,
         "loaded_models": list(models.keys()),
         "missing_models": missing_models,
+        "probability_method": "Moyenne des probabilités des modèles utilisés"
     }
-
-    if "Random Forest" in model_results and "probabilities" in model_results["Random Forest"]:
-        result["probabilities"] = model_results["Random Forest"]["probabilities"]
-    else:
-        for model_result in model_results.values():
-            if "probabilities" in model_result:
-                result["probabilities"] = model_result["probabilities"]
-                break
 
     print(json.dumps(result, ensure_ascii=False))
 

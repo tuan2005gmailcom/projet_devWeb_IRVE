@@ -20,7 +20,6 @@ header("Content-Type: application/json; charset=UTF-8");
           ├── model_implantation_randomforest.pkl
           ├── model_implantation_gradientboost.pkl
           ├── model_implantation_XGBoost.pkl
-          ├── model_implantation_logisticregression.pkl
           ├── label_encoder_implantation.pkl
           └── features_implantation.pkl
 */

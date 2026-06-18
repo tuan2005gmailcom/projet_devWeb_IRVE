@@ -26,17 +26,15 @@ function renderModelResults(models) {
     return;
   }
 
-  if (!models || Object.keys(models).length === 0) {
-    container.innerHTML = `
-      <div><span>Modèles</span><strong>Non disponibles</strong></div>
-    `;
-    return;
-  }
-
   container.innerHTML = "";
 
-  Object.entries(models).forEach(([modelName, modelResult]) => {
-    const prediction = modelResult.prediction || "-";
+  const wantedModels = ["Random Forest", "XGBoost"];
+
+  wantedModels.forEach(modelName => {
+    const modelResult = models && models[modelName] ? models[modelName] : null;
+    const prediction = modelResult && modelResult.prediction
+      ? modelResult.prediction
+      : "Non chargé";
 
     const row = document.createElement("div");
     row.innerHTML = `
