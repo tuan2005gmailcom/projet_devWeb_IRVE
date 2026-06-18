@@ -13,11 +13,13 @@ if (menuButton && mainNav) {
   });
 }
 
+// Lecture d’un paramètre dans l’URL, par exemple ?station=...
 function getParam(name) {
   var params = new URLSearchParams(window.location.search);
   return params.get(name);
 }
 
+// Recherche la station sélectionnée, sinon on prend la première par défaut.
 function getStationById(id) {
   if (!window.stations || window.stations.length === 0) return null;
 
@@ -87,6 +89,7 @@ function openStationOnMap(station) {
   leafletMarkers[station.id].openPopup();
 }
 
+// Affichage de toutes les stations sur la carte Leaflet.
 function renderLeafletMap() {
   var mapDiv = document.getElementById("leafletMap");
   if (!mapDiv || !window.stations || typeof L === "undefined") return;
@@ -189,6 +192,7 @@ function renderStationList() {
   selectStation(localStorage.getItem("selectedStationId") || window.stations[0].id);
 }
 
+// Filtre la liste et la carte selon la recherche, le département et le connecteur.
 function filterStationList() {
   var searchInput = document.getElementById("searchInput");
   var deptFilter = document.getElementById("deptFilter");
@@ -228,6 +232,7 @@ function filterStationList() {
   updateLeafletMarkersVisibility();
 }
 
+// Initialisation de la page Visualisation.
 function setupVisualisationPage() {
   var stationList = document.getElementById("stationList");
   if (!stationList) return;
@@ -287,6 +292,7 @@ function setupVisualisationPage() {
   }
 }
 
+// Exemple de logique simple pour simuler un résultat de clustering.
 function getClusterResults(station) {
   var dbscan = "Cluster urbain standard";
   var kmeans = "Groupe K2 : standard";
@@ -357,6 +363,7 @@ function setupClusterPage() {
   document.getElementById("kmeansComment").textContent = "K-means compare le profil de la station avec les autres stations.";
 }
 
+// Prépare l’affichage selon le type de prédiction demandé.
 function setupPredictionPage() {
   var predictionPage = document.getElementById("predictionPage");
   if (!predictionPage) return;
@@ -555,6 +562,7 @@ function updateStationDetail() {
   updateText("detailAccess", station.access);
 }
 
+// Recalcule les statistiques après le choix d’un département.
 function updateStatsPage() {
   var deptSelect = document.getElementById("statsDeptSelect");
   if (!deptSelect || !window.stations) return;
@@ -595,6 +603,7 @@ function updateStatsPage() {
   updateStationDetail();
 }
 
+// Initialisation de la page Statistiques.
 function setupStatsPage() {
   var statsPage = document.getElementById("statsPage");
   if (!statsPage || !window.stations) return;

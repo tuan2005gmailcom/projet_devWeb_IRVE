@@ -1,9 +1,11 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
+// Connexion à la base de données.
 require_once "config_db.php";
 
 try {
+    // On récupère les stations avec les informations principales utilisées par le site.
     $sql = "
         SELECT
             s.id_station,
@@ -49,9 +51,11 @@ try {
         ORDER BY s.id_station ASC
     ";
 
+    // Exécution de la requête et récupération sous forme de tableau associatif.
     $stmt = $pdo->query($sql);
     $stations = $stmt->fetchAll();
 
+    // Réponse envoyée au JavaScript en JSON.
     echo json_encode([
         "success" => true,
         "count" => count($stations),
@@ -59,6 +63,7 @@ try {
     ], JSON_UNESCAPED_UNICODE);
 
 } catch (PDOException $e) {
+    // En cas de problème MySQL, on retourne une erreur claire côté client.
     http_response_code(500);
 
     echo json_encode([

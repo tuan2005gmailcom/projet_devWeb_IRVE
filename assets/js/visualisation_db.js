@@ -1,8 +1,10 @@
+// Script de visualisation : liste des stations, filtres et carte Leaflet.
 let stations = [];
 let selectedStation = null;
 let map;
 let markersLayer;
 
+// Récupère tous les connecteurs disponibles pour une station.
 function getConnectors(station) {
   const connectors = [];
 
@@ -23,6 +25,7 @@ function getDeptLabel(station) {
   return `${station.nom_departement} (${station.code_departement})`;
 }
 
+// Évite d’afficher des valeurs vides ou nulles dans l’interface.
 function safeValue(value, fallback = "Non précisé") {
   if (value === null || value === undefined || String(value).trim() === "") {
     return fallback;
@@ -53,6 +56,7 @@ function formatTarification(station) {
     : tarification;
 }
 
+// Contenu de la popup affichée quand on clique sur un marqueur.
 function buildStationPopup(station) {
   return `
     <div class="station-map-popup">
@@ -97,6 +101,7 @@ function buildStationPopup(station) {
   `;
 }
 
+// Remplit les filtres à partir des données chargées depuis MySQL.
 function fillFiltersFromDatabase() {
   const deptFilter = document.getElementById("deptFilter");
   const connectorFilter = document.getElementById("connectorFilter");
@@ -137,6 +142,7 @@ function initMenu() {
   }
 }
 
+// Initialisation de la carte Leaflet centrée sur la France.
 function initMap() {
   map = L.map("leafletMap").setView([46.6, 2.5], 6);
 
@@ -147,6 +153,7 @@ function initMap() {
   markersLayer = L.layerGroup().addTo(map);
 }
 
+// Affiche les marqueurs sur la carte et met en avant la station sélectionnée.
 function loadStationsOnMap(data, fitMap = true, openSelectedPopup = false) {
   markersLayer.clearLayers();
 
@@ -201,6 +208,7 @@ function loadStationsOnMap(data, fitMap = true, openSelectedPopup = false) {
   }
 }
 
+// Crée le tableau des stations à gauche de la carte.
 function renderStationList(data) {
   const stationList = document.getElementById("stationList");
   const resultCount = document.getElementById("resultCount");
@@ -274,6 +282,7 @@ function renderStationList(data) {
   stationList.appendChild(tableWrapper);
 }
 
+// Applique les filtres de recherche, département et connecteur.
 function applyFilters() {
   const searchValue = document.getElementById("searchInput").value.toLowerCase();
   const deptValue = document.getElementById("deptFilter").value;
@@ -301,6 +310,7 @@ function applyFilters() {
   loadStationsOnMap(filtered);
 }
 
+// Appelle l’API PHP pour récupérer les stations depuis MySQL.
 async function loadStationsFromDatabase() {
   const stationList = document.getElementById("stationList");
   const resultCount = document.getElementById("resultCount");
@@ -335,6 +345,7 @@ async function loadStationsFromDatabase() {
   }
 }
 
+// On prépare la page une fois que tout le HTML est disponible.
 document.addEventListener("DOMContentLoaded", () => {
   initMenu();
   initMap();

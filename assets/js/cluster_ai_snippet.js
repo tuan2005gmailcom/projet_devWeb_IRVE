@@ -1,3 +1,4 @@
+// Gestion du menu mobile sur les petites tailles d’écran.
 function initMenu() {
   const menuButton = document.getElementById("menuButton");
   const mainNav = document.getElementById("mainNav");
@@ -9,6 +10,7 @@ function initMenu() {
   }
 }
 
+// Petite fonction pour remplir une zone de texte sans répéter le même code.
 function setText(id, value) {
   const element = document.getElementById(id);
   if (element) {
@@ -16,6 +18,7 @@ function setText(id, value) {
   }
 }
 
+// Couleurs utilisées pour afficher visuellement le cluster sur la carte.
 function getMarkerColor(colorName) {
   const colors = {
     red: "#ef4444",
@@ -34,6 +37,7 @@ function getMarkerColor(colorName) {
   return colors[colorName] || "#2563eb";
 }
 
+// Création de la carte Leaflet avec le marqueur du cluster prédit.
 function renderClusterMap(point, stationName) {
   const mapElement = document.getElementById("clusterLeafletMap");
 
@@ -69,6 +73,7 @@ function renderClusterMap(point, stationName) {
   `).openPopup();
 }
 
+// Récupère les informations dans l’URL puis appelle PHP/Python pour prédire le cluster.
 async function loadClusterPrediction() {
   const params = new URLSearchParams(window.location.search);
 
@@ -148,6 +153,7 @@ async function loadClusterPrediction() {
   }
 }
 
+// On lance le script seulement quand la page est complètement chargée.
 document.addEventListener("DOMContentLoaded", () => {
   initMenu();
   loadClusterPrediction();

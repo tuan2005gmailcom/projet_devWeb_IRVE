@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  <!-- En-tête commun : logo, navigation et badge du projet -->
   <header class="site-header">
     <div class="header-inner">
       <a class="logo" href="index.html">
@@ -31,6 +32,7 @@
     </div>
   </header>
 
+  <!-- Contenu principal : prédiction du type d’implantation de la station -->
   <main class="container" id="predictionPage">
     <div class="page-heading">
       <h1>Prédiction de l’implantation</h1>
@@ -38,6 +40,7 @@
     </div>
 
     <section class="page-layout">
+      <!-- Données de la station utilisées comme entrée pour les modèles -->
       <div class="panel">
         <div class="panel-header">
           <div>
@@ -57,6 +60,7 @@
         </div>
       </div>
 
+      <!-- Zone de sortie : résultat final et détails par modèle -->
       <div class="panel prediction-result-panel">
         <div class="panel-header">
           <div>
@@ -75,6 +79,7 @@
           Appel des modèles Python en cours...
         </div>
 
+        <!-- Comparaison rapide des modèles utilisés pour la prédiction -->
         <div class="sub-panel prediction-models-panel">
           <h3>Résultats par modèle</h3>
           <p class="panel-note">Comparaison des prédictions retournées par chaque modèle.</p>
@@ -87,6 +92,7 @@
           </div>
         </div>
 
+        <!-- Les probabilités sont affichées seulement si le modèle les fournit -->
         <div class="sub-panel prediction-proba-panel">
           <h3>Probabilités par classe</h3>
           <p class="panel-note">Affichage seulement si un modèle retourne predict_proba.</p>
@@ -98,6 +104,7 @@
     </section>
   </main>
 
+  <!-- Pied de page avec les informations générales du projet -->
   <footer class="site-footer">
     <div class="footer-inner">
       <span><strong>⚡ IRVE Data Explorer</strong></span>
@@ -106,6 +113,7 @@
     </div>
   </footer>
 
+  <!-- Scripts utilisés pour charger les données et gérer les interactions -->
   <script src="assets/js/prediction_implantation.js"></script>
 </body>
 

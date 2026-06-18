@@ -10,6 +10,7 @@
 </head>
 
 <body>
+  <!-- En-tête commun : logo, navigation et badge du projet -->
   <header class="site-header">
     <div class="header-inner">
       <a class="logo" href="index.html">
@@ -32,12 +33,14 @@
     </div>
   </header>
 
+  <!-- Contenu principal : recherche, sélection et affichage des stations sur la carte -->
   <main class="container">
     <div class="page-heading">
       <h1>Visualisation</h1>
       <p>Choisissez une station dans la liste ou cliquez directement sur un point de la carte pour afficher ses statistiques générales.</p>
     </div>
 
+    <!-- Filtres de recherche pour réduire la liste des stations -->
     <section class="filter-bar">
       <input id="searchInput" type="text" placeholder="Rechercher une station ou un identifiant…">
       <select id="deptFilter">
@@ -49,6 +52,7 @@
       <button class="btn small" id="resetFilters" type="button">↻ Réinitialiser</button>
     </section>
 
+    <!-- Mise en page principale : liste à gauche et carte à droite -->
     <section class="visualisation-layout">
       <div class="panel">
         <div class="panel-header">
@@ -59,10 +63,12 @@
           <span id="resultCount">Chargement...</span>
         </div>
 
+        <!-- La liste est remplie automatiquement par le fichier JavaScript -->
         <div class="station-list" id="stationList">
           <!-- Les stations sont chargées depuis MySQL par api_stations.php -->
         </div>
 
+        <!-- Boutons pour envoyer la station choisie vers les pages de prédiction -->
         <div class="prediction-actions">
           <button class="btn small" id="goCluster" type="button">Prédire clusters</button>
           <button class="btn small" id="goImplantation" type="button">Prédire implantation</button>
@@ -90,6 +96,7 @@
     </section>
   </main>
 
+  <!-- Pied de page avec les informations générales du projet -->
   <footer class="site-footer">
     <div class="footer-inner">
       <span><strong>⚡ IRVE Data Explorer</strong></span>
@@ -98,6 +105,7 @@
     </div>
   </footer>
 
+  <!-- Scripts utilisés pour charger les données et gérer les interactions -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="assets/js/visualisation_db.js"></script>
 </body>

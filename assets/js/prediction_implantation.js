@@ -1,3 +1,4 @@
+// Gestion simple du menu mobile.
 function initMenu() {
   const menuButton = document.getElementById("menuButton");
   const mainNav = document.getElementById("mainNav");
@@ -9,6 +10,7 @@ function initMenu() {
   }
 }
 
+// Permet d’afficher une valeur dans la page, avec '-' si elle est vide.
 function setText(id, value) {
   const element = document.getElementById(id);
   if (element) {
@@ -16,6 +18,7 @@ function setText(id, value) {
   }
 }
 
+// Affiche la prédiction retournée par chaque modèle.
 function renderModelResults(models) {
   const container = document.getElementById("modelResultsList");
 
@@ -45,6 +48,7 @@ function renderModelResults(models) {
   });
 }
 
+// Affiche les probabilités sous forme de barres pour mieux comparer les classes.
 function renderProbabilities(probabilities) {
   const probabilityList = document.getElementById("probabilityList");
 
@@ -82,6 +86,7 @@ function renderProbabilities(probabilities) {
   });
 }
 
+// Prépare les données de la station puis appelle le fichier PHP de prédiction.
 async function loadImplantationPrediction() {
   const params = new URLSearchParams(window.location.search);
 
@@ -152,6 +157,7 @@ async function loadImplantationPrediction() {
   }
 }
 
+// Démarrage du script après le chargement de la page.
 document.addEventListener("DOMContentLoaded", () => {
   initMenu();
   loadImplantationPrediction();

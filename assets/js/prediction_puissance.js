@@ -1,3 +1,4 @@
+// Gestion du menu mobile pour cette page.
 function initMenuPower() {
   const menuButton = document.getElementById("menuButton");
   const mainNav = document.getElementById("mainNav");
@@ -9,6 +10,7 @@ function initMenuPower() {
   }
 }
 
+// Remplit les informations de la station dans le résumé.
 function setPowerText(id, value) {
   const element = document.getElementById(id);
   if (element) {
@@ -16,6 +18,7 @@ function setPowerText(id, value) {
   }
 }
 
+// Formate la puissance avec deux décimales et l’unité.
 function formatKw(value, unit = "kW") {
   const number = Number(value);
 
@@ -26,6 +29,7 @@ function formatKw(value, unit = "kW") {
   return `${number.toFixed(2)} ${unit}`;
 }
 
+// Affiche les résultats retournés par les différents modèles de régression.
 function renderPowerModelResults(models, unit = "kW") {
   const container = document.getElementById("powerModelResultsList");
 
@@ -61,6 +65,7 @@ function renderPowerModelResults(models, unit = "kW") {
   });
 }
 
+// Appelle le fichier PHP qui lance les modèles Python de puissance.
 async function loadPowerPrediction() {
   const params = new URLSearchParams(window.location.search);
 
@@ -115,7 +120,7 @@ async function loadPowerPrediction() {
 
     if (mainResult) mainResult.textContent = finalText;
 
-    // Compatibility with old HTML if rfPowerResult still exists
+    // Petit garde-fou si une ancienne version du HTML utilise encore rfPowerResult
     if (rfResult) {
       const rfPrediction = data.models?.["Random Forest"]?.prediction ?? finalValue;
       rfResult.textContent = formatKw(rfPrediction, unit);
@@ -148,6 +153,7 @@ async function loadPowerPrediction() {
   }
 }
 
+// Lancement automatique lorsque la page est prête.
 document.addEventListener("DOMContentLoaded", () => {
   initMenuPower();
   loadPowerPrediction();

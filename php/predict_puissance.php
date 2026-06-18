@@ -2,9 +2,10 @@
 header("Content-Type: application/json; charset=UTF-8");
 
 /*
-  PHP bridge for puissance prediction with multiple models.
+  Ce fichier sert de pont entre la page web et les modèles Python de régression.
+  Il envoie les caractéristiques de la station et récupère la puissance prédite.
 
-  Expected structure:
+  Structure attendue :
 
   root/
   ├── puissance.html
@@ -19,10 +20,12 @@ header("Content-Type: application/json; charset=UTF-8");
           └── model_config.pkl
 */
 
+// Récupère une valeur avec une valeur par défaut si elle manque.
 function get_value($data, $key, $default = "") {
     return isset($data[$key]) ? $data[$key] : $default;
 }
 
+// Nettoie les valeurs comme "22 kW" pour les convertir en nombre.
 function numeric_value($value, $default = 0) {
     if ($value === null || $value === "") return $default;
 
@@ -33,6 +36,7 @@ function numeric_value($value, $default = 0) {
     return is_numeric($value) ? $value : $default;
 }
 
+// Permet de retrouver le JSON même si Python affiche aussi du texte.
 function extract_json_from_text($text) {
     $pos = strpos($text, "{");
 
@@ -51,9 +55,9 @@ function extract_json_from_text($text) {
 }
 
 /*
-  Read input:
-  - GET from puissance.html
-  - or JSON body if later you use POST fetch
+  Lecture des données :
+  - soit en GET depuis puissance.html
+  - soit en JSON si on utilise un fetch en POST plus tard
 */
 $rawBody = file_get_contents("php://input");
 $bodyData = json_decode($rawBody, true);
@@ -64,6 +68,7 @@ if (is_array($bodyData)) {
     $input = $_GET;
 }
 
+// Données envoyées au modèle Python.
 $payload = [
     "implantation_station" => get_value($input, "implantation_station", "unknown"),
     "condition_acces" => get_value($input, "condition_acces", get_value($input, "access", "unknown")),
@@ -96,8 +101,7 @@ if ($workDir === false) {
 }
 
 /*
-  The new script is puissance_multi_model.py.
-  If you rename it to puissance.py, this PHP still works.
+  On accepte deux noms possibles pour le script Python, selon l’organisation du projet.
 */
 $scriptCandidates = [
     $workDir . DIRECTORY_SEPARATOR . "puissance_multi_model.py",
@@ -122,8 +126,8 @@ if ($script === null) {
 }
 
 /*
-  Linux server: python3
-  WAMP / Windows: replace python3 with python
+  Serveur Linux : python3
+  WAMP / Windows : remplacer python3 par python
 */
 $python = "python3";
 $cmd = escapeshellcmd($python) . " " . escapeshellarg($script);
@@ -135,7 +139,7 @@ $descriptors = [
 ];
 
 /*
-  Important: workDir lets Python find .pkl files in python/puissance/.
+  Le dossier de travail permet à Python de retrouver les modèles .pkl.
 */
 $process = proc_open($cmd, $descriptors, $pipes, $workDir);
 
@@ -147,6 +151,7 @@ if (!is_resource($process)) {
     exit;
 }
 
+// Envoi des données de la station à Python.
 fwrite($pipes[0], json_encode($payload, JSON_UNESCAPED_UNICODE));
 fclose($pipes[0]);
 
@@ -158,6 +163,7 @@ fclose($pipes[2]);
 
 $returnCode = proc_close($process);
 
+// Décodage de la réponse envoyée par Python.
 $result = json_decode(trim($stdout), true);
 
 if ($result === null) {

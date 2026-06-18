@@ -2,9 +2,10 @@
 header("Content-Type: application/json; charset=UTF-8");
 
 /*
-  PHP bridge for implantation prediction.
+  Ce fichier sert de pont entre la page web et le modèle Python.
+  Il prépare les données de la station, lance Python, puis retourne le résultat en JSON.
 
-  Expected structure:
+  Structure attendue :
 
   root/
   ├── implantation.html
@@ -24,10 +25,12 @@ header("Content-Type: application/json; charset=UTF-8");
           └── features_implantation.pkl
 */
 
+// Récupère une valeur sans provoquer d’erreur si la clé n’existe pas.
 function get_value($data, $key, $default = "") {
     return isset($data[$key]) ? $data[$key] : $default;
 }
 
+// Convertit les valeurs reçues en nombres utilisables par le modèle.
 function numeric_value($value, $default = 0) {
     if ($value === null || $value === "") return $default;
 
@@ -38,6 +41,7 @@ function numeric_value($value, $default = 0) {
     return is_numeric($value) ? $value : $default;
 }
 
+// Utile si Python affiche du texte avant le vrai JSON.
 function extract_json_from_text($text) {
     $pos = strpos($text, "{");
 
@@ -55,6 +59,7 @@ function extract_json_from_text($text) {
     return null;
 }
 
+// On accepte les données envoyées en JSON ou en paramètres GET.
 $rawBody = file_get_contents("php://input");
 $bodyData = json_decode($rawBody, true);
 
@@ -64,6 +69,7 @@ if (is_array($bodyData)) {
     $input = $_GET;
 }
 
+// Données finales envoyées au script Python.
 $payload = [
     "nbre_pdc" => numeric_value(get_value($input, "nbre_pdc", get_value($input, "points", 0))),
     "puissance_nominale" => numeric_value(get_value($input, "puissance_nominale", get_value($input, "power", 0))),
@@ -98,8 +104,8 @@ if ($script === false) {
 $workDir = dirname($script);
 
 /*
-  Linux server: python3
-  WAMP / Windows: replace python3 with python
+  Serveur Linux : python3
+  WAMP / Windows : remplacer python3 par python
 */
 $python = "python3";
 $command = escapeshellcmd($python) . " " . escapeshellarg($script);
@@ -111,8 +117,7 @@ $descriptors = [
 ];
 
 /*
-  Important: run Python from python/implantation/
-  so it can find all .pkl files correctly.
+  On lance Python depuis son dossier pour qu’il retrouve correctement les fichiers .pkl.
 */
 $process = proc_open($command, $descriptors, $pipes, $workDir);
 
@@ -124,6 +129,7 @@ if (!is_resource($process)) {
     exit;
 }
 
+// Envoi du payload au script Python par l’entrée standard.
 fwrite($pipes[0], json_encode($payload, JSON_UNESCAPED_UNICODE));
 fclose($pipes[0]);
 
@@ -135,6 +141,7 @@ fclose($pipes[2]);
 
 $returnCode = proc_close($process);
 
+// Lecture du résultat retourné par Python.
 $result = json_decode(trim($stdout), true);
 
 if ($result === null) {

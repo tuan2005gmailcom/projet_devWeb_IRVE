@@ -1,6 +1,8 @@
+// Script de statistiques : les données viennent de MySQL via l’API PHP.
 let stations = [];
 let currentData = [];
 
+// Détermine le connecteur principal affiché pour une station.
 function getConnector(station) {
   if (Number(station.has_combo_ccs) === 1) return "CCS Combo 2";
   if (Number(station.has_type_2) === 1) return "Type 2";
@@ -14,6 +16,7 @@ function getDeptLabel(station) {
   return `${station.nom_departement} (${station.code_departement})`;
 }
 
+// Convertit une valeur en nombre pour éviter les erreurs de calcul.
 function numberValue(value) {
   const n = Number(value);
   return isNaN(n) ? 0 : n;
@@ -30,6 +33,7 @@ function initMenu() {
   }
 }
 
+// Charge toutes les stations depuis la base de données.
 async function loadStatsFromDatabase() {
   try {
     const response = await fetch("php/api_stations.php");
@@ -52,6 +56,7 @@ async function loadStatsFromDatabase() {
   }
 }
 
+// Remplit le menu déroulant des départements.
 function fillDepartmentSelect() {
   const deptSelect = document.getElementById("statsDeptSelect");
   const departments = [...new Set(stations.map(getDeptLabel))].sort();
@@ -89,6 +94,7 @@ function getFilteredData() {
   return stations.filter(station => getDeptLabel(station) === deptValue);
 }
 
+// Met à jour le tableau, les KPI et les graphiques.
 function updateStatsPage() {
   currentData = getFilteredData();
 
@@ -133,6 +139,7 @@ function renderTable(data) {
   });
 }
 
+// Calcule les indicateurs principaux affichés en haut de la page.
 function renderKpis(data) {
   const nbStations = data.length;
   const totalPoints = data.reduce((sum, s) => sum + numberValue(s.nbre_pdc), 0);
@@ -186,6 +193,7 @@ function clearStationDetail() {
   document.getElementById("detailAccess").textContent = "-";
 }
 
+// Affiche les 10 stations avec les puissances les plus élevées.
 function renderPowerChart(data) {
   const chart = document.getElementById("powerStatsChart");
   chart.innerHTML = "";
@@ -263,6 +271,7 @@ function renderAccessChart(data) {
   });
 }
 
+// Compte les différents types de connecteurs présents dans les stations.
 function countConnectors(data) {
   const counts = {
     "CCS Combo 2": 0,
@@ -310,6 +319,7 @@ function renderConnectorChart(data) {
   });
 }
 
+// Lancement des événements après le chargement du HTML.
 document.addEventListener("DOMContentLoaded", () => {
   initMenu();
   loadStatsFromDatabase();

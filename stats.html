@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  <!-- En-tête commun : logo, navigation et badge du projet -->
   <header class="site-header">
     <div class="header-inner">
       <a class="logo" href="index.html">
@@ -31,6 +32,7 @@
     </div>
   </header>
 
+  <!-- Contenu principal : statistiques et détails des stations -->
   <main class="container" id="statsPage">
     <div class="page-heading">
       <h1>Statistiques des stations</h1>
@@ -38,6 +40,7 @@
       </p>
     </div>
 
+    <!-- Filtres pour choisir le département et la station à analyser -->
     <section class="filter-bar stats-filter-bar">
       <label class="simple-label">
         Département
@@ -54,6 +57,7 @@
       </label>
     </section>
 
+    <!-- Tableau mis à jour avec les stations correspondant aux filtres -->
     <section class="panel stats-table-panel">
       <div class="panel-header">
         <div>
@@ -81,6 +85,7 @@
     </section>
 
 
+    <!-- Indicateurs principaux calculés à partir des stations affichées -->
     <section class="stats-kpi-grid">
       <div class="stat-card"><strong id="statNbStations">0</strong><span>Stations</span></div>
       <div class="stat-card"><strong id="statTotalPoints">0</strong><span>Points de charge</span></div>
@@ -90,6 +95,7 @@
       <div class="stat-card"><strong id="statMainConnector">-</strong><span>Connecteur principal</span></div>
     </section>
 
+    <!-- Graphiques simples et détail de la station sélectionnée -->
     <section class="stats-panel-grid">
       <div class="panel">
         <div class="panel-header">
@@ -119,6 +125,7 @@
       </div>
     </section>
 
+    <!-- Répartitions complémentaires : accès et types de connecteurs -->
     <section class="stats-panel-grid bottom-panels">
       <div class="panel">
         <div class="panel-header">
@@ -143,6 +150,7 @@
 
   </main>
 
+  <!-- Pied de page avec les informations générales du projet -->
   <footer class="site-footer">
     <div class="footer-inner">
       <span><strong>⚡ IRVE Data Explorer</strong></span>
@@ -151,6 +159,7 @@
     </div>
   </footer>
 
+  <!-- Scripts utilisés pour charger les données et gérer les interactions -->
   <script src="assets/js/stats_db.js"></script>
 </body>
 

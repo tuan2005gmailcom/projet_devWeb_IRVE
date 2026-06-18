@@ -10,6 +10,7 @@
 </head>
 
 <body>
+  <!-- En-tête du site avec le logo et la navigation -->
   <header class="site-header">
     <div class="header-inner">
       <a class="logo" href="index.html">
@@ -38,6 +39,7 @@
       <p>Les données sont chargées depuis MySQL avec PHP. La liste affiche seulement 6 informations principales par station.</p>
     </div>
 
+    <!-- Filtres pour rechercher une station dans la base -->
     <section class="filter-bar">
       <input id="searchInput" type="text" placeholder="Rechercher une station ou un identifiant…">
 
@@ -52,6 +54,7 @@
       <button class="btn small" id="resetFilters" type="button">↻ Réinitialiser</button>
     </section>
 
+    <!-- Zone principale : liste des stations à gauche et carte à droite -->
     <section class="visualisation-layout">
       <div class="panel">
         <div class="panel-header">
@@ -104,6 +107,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
+    // Variables principales utilisées pour la liste, les filtres et la carte.
     let allStations = [];
     let filteredStations = [];
     let selectedStation = null;
@@ -121,6 +125,7 @@
     const goPower = document.getElementById("goPower");
     const mapStatus = document.getElementById("mapStatus");
 
+    // Initialisation de la carte Leaflet centrée sur la France.
     function initMap() {
       map = L.map("leafletMap").setView([46.6, 2.4], 6);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -131,6 +136,7 @@
       markerLayer = L.layerGroup().addTo(map);
     }
 
+    // Petite fonction pour créer les options des menus déroulants.
     function createOption(value, label) {
       const option = document.createElement("option");
       option.value = value;
@@ -138,6 +144,7 @@
       return option;
     }
 
+    // Remplit les filtres à partir des données chargées depuis MySQL.
     function fillFilters() {
       const departments = [...new Set(allStations.map(s => s.departement))].sort();
       const connectors = [...new Set(allStations.map(s => s.connecteur))].sort();
@@ -151,6 +158,7 @@
       connectors.forEach(conn => connectorFilter.appendChild(createOption(conn, conn)));
     }
 
+    // Applique la recherche texte, le filtre département et le filtre connecteur.
     function applyFilters() {
       const search = searchInput.value.trim().toLowerCase();
       const dep = deptFilter.value;
@@ -168,6 +176,7 @@
       renderMap();
     }
 
+    // Affiche la liste des stations après filtrage.
     function renderList() {
       resultCount.textContent = `${filteredStations.length} résultats`;
       stationList.innerHTML = "";
@@ -216,6 +225,7 @@
       });
     }
 
+    // Met à jour les points sur la carte selon les stations affichées.
     function renderMap() {
       markerLayer.clearLayers();
 
@@ -266,6 +276,7 @@
       mapStatus.textContent = `${filteredStations.length} station(s)`;
     }
 
+    // Charge les stations depuis l’API PHP reliée à MySQL.
     async function loadStationsFromDatabase() {
       try {
         const response = await fetch("api_stations.php");
@@ -290,6 +301,7 @@
       }
     }
 
+    // Écouteurs pour mettre à jour l’affichage quand l’utilisateur change les filtres.
     searchInput.addEventListener("input", applyFilters);
     deptFilter.addEventListener("change", applyFilters);
     connectorFilter.addEventListener("change", applyFilters);
@@ -302,6 +314,7 @@
       applyFilters();
     });
 
+    // Boutons de redirection vers les pages de prédiction.
     goCluster.addEventListener("click", () => {
       if (!selectedStation) {
         alert("Choisissez d'abord une station.");
@@ -318,6 +331,7 @@
       alert("À connecter plus tard avec le modèle IA de puissance.");
     });
 
+    // Menu mobile.
     document.getElementById("menuButton")?.addEventListener("click", () => {
       document.getElementById("mainNav")?.classList.toggle("open");
     });

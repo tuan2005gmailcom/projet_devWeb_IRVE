@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
+// La prédiction a besoin des coordonnées de la station sélectionnée.
 if (!isset($_GET["lat"]) || !isset($_GET["lon"])) {
     echo json_encode([
         "success" => false,
@@ -12,6 +13,7 @@ if (!isset($_GET["lat"]) || !isset($_GET["lon"])) {
 $lat = $_GET["lat"];
 $lon = $_GET["lon"];
 
+// Petite vérification pour éviter d’envoyer de mauvaises valeurs au script Python.
 if (!is_numeric($lat) || !is_numeric($lon)) {
     echo json_encode([
         "success" => false,
@@ -20,10 +22,12 @@ if (!is_numeric($lat) || !is_numeric($lon)) {
     exit;
 }
 
+// Commande Python utilisée sur le serveur.
 $python = "python3";
 // Sur WAMP Windows, remplace par :
 // $python = "python";
 
+// Chemin vers le script qui contient le modèle de clustering.
 $script = realpath(__DIR__ . "/../python/clustering/clusters_map_web.py");
 
 if ($script === false) {
@@ -35,10 +39,8 @@ if ($script === false) {
 }
 
 /*
-  Important :
-  On utilise seulement --json.
-  On ne met PAS --output.
-  Donc Python ne crée aucun fichier carte.
+  Ici, on demande seulement un résultat JSON.
+  Le script Python ne crée donc pas de fichier carte.
 */
 $command = escapeshellcmd($python) . " "
     . escapeshellarg($script)
@@ -46,6 +48,7 @@ $command = escapeshellcmd($python) . " "
     . " --lon " . escapeshellarg($lon)
     . " --json";
 
+// Lancement du script Python depuis PHP.
 $output = shell_exec($command);
 
 if ($output === null || trim($output) === "") {
@@ -57,6 +60,7 @@ if ($output === null || trim($output) === "") {
     exit;
 }
 
+// Transformation de la réponse Python en tableau PHP.
 $result = json_decode($output, true);
 
 if ($result === null) {
