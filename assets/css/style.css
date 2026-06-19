@@ -1,9 +1,11 @@
 /*
-  Projet IRVE sans React et sans framework.
-  HTML + CSS + JavaScript classique.
-  Version nettoyée : doublons supprimés.
+  Feuille de style principale du projet IRVE.
+  Elle contient la mise en page générale, les couleurs,
+  les tableaux, les cartes et les pages de prédiction.
 */
 
+/* Variables de couleurs utilisées dans tout le site.
+   Cela permet de modifier facilement le thème général. */
 :root {
   --dark: #0F2044;
   --blue: #1B6FDB;
@@ -18,10 +20,12 @@
   --card: #FFFFFF;
 }
 
+/* Le padding et les bordures restent inclus dans la taille des éléments. */
 * {
   box-sizing: border-box;
 }
 
+/* Style général appliqué à toutes les pages. */
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
@@ -29,13 +33,16 @@ body {
   color: var(--text);
 }
 
+/* Les liens utilisent leur couleur héritée et n'ont pas de soulignement. */
 a {
   text-decoration: none;
   color: inherit;
 }
 
-/* ===== Header / Footer ===== */
+/*  Header / Footer  */
 
+/* En-tête commun à toutes les pages.
+   Il reste visible lorsque l'utilisateur descend dans la page. */
 .site-header {
   background: var(--dark);
   color: white;
@@ -51,6 +58,7 @@ a {
   margin: auto;
 }
 
+/* Organisation du contenu du header : logo, menu et badge. */
 .header-inner {
   min-height: 64px;
   padding: 0 32px;
@@ -66,6 +74,7 @@ a {
   min-width: 245px;
 }
 
+/* Taille fixe du logo pour qu'il reste bien aligné dans le header. */
 .logo-icon {
   width: 36px;
   height: 36px;
@@ -100,6 +109,7 @@ a {
   margin-top: 2px;
 }
 
+/* Menu principal centré dans le header. */
 .nav {
   flex: 1;
   display: flex;
@@ -130,6 +140,7 @@ a {
   white-space: nowrap;
 }
 
+/* Le bouton du menu mobile est caché sur les grands écrans. */
 .menu-button {
   display: none;
   border: none;
@@ -140,6 +151,7 @@ a {
   cursor: pointer;
 }
 
+/* Pied de page commun avec les informations du projet. */
 .site-footer {
   background: var(--dark);
   color: #94A3B8;
@@ -162,8 +174,9 @@ a {
   color: #7DB8F7;
 }
 
-/* ===== Layout général ===== */
+/*  Layout général  */
 
+/* Conteneur principal qui limite la largeur du contenu. */
 .container {
   max-width: 1440px;
   margin: auto;
@@ -191,6 +204,7 @@ a {
   color: var(--muted);
 }
 
+/* Grilles utilisées pour afficher deux zones côte à côte. */
 .two-columns,
 .visualisation-layout,
 .page-layout,
@@ -206,6 +220,7 @@ a {
   grid-template-columns: 1fr 1fr;
 }
 
+/* Style commun des cartes et panneaux du site. */
 .panel,
 .info-box,
 .stat-card,
@@ -247,8 +262,9 @@ a {
   font-size: 13px;
 }
 
-/* ===== Hero accueil ===== */
+/*  Hero accueil  */
 
+/* Grande section de présentation sur la page d'accueil. */
 .hero {
   background: var(--dark);
   border-radius: 16px;
@@ -304,6 +320,7 @@ a {
   font-size: 86px;
 }
 
+/* L'image du hero remplit toute sa zone sans être déformée. */
 .hero-image img {
   width: 100%;
   height: 100%;
@@ -316,8 +333,9 @@ a {
   flex-wrap: wrap;
 }
 
-/* ===== Boutons / Badges ===== */
+/*  Boutons / Badges  */
 
+/* Style de base réutilisé pour les différents boutons. */
 .btn {
   display: inline-block;
   border: 1px solid var(--border);
@@ -354,6 +372,7 @@ a {
   border-color: var(--blue);
 }
 
+/* Petits badges utilisés pour afficher un statut ou une catégorie. */
 .badge {
   display: inline-block;
   padding: 4px 8px;
@@ -387,8 +406,9 @@ a {
   color: var(--dark);
 }
 
-/* ===== Cartes accueil ===== */
+/*  Cartes accueil  */
 
+/* Grilles utilisées pour les cartes d'accueil et les statistiques. */
 .cards-grid,
 .stats-grid,
 .result-grid,
@@ -450,8 +470,9 @@ a {
   font-weight: bold;
 }
 
-/* ===== Formulaires / Filtres ===== */
+/*  Formulaires / Filtres  */
 
+/* Style simple pour les champs de filtre et les listes déroulantes. */
 select,
 input {
   border: 1px solid var(--border);
@@ -484,8 +505,9 @@ input {
   min-width: 260px;
 }
 
-/* ===== Visualisation : tableau + carte ===== */
+/*  Visualisation : tableau + carte  */
 
+/* La liste devient scrollable si beaucoup de stations sont affichées. */
 .station-list {
   max-height: 520px;
   overflow-y: auto;
@@ -509,6 +531,7 @@ input {
   background: white;
 }
 
+/* Tableau utilisé pour afficher les stations dans la page Visualisation. */
 .station-table {
   width: 100%;
   border-collapse: collapse;
@@ -541,10 +564,12 @@ input {
   transition: background 0.15s ease;
 }
 
+/* La ligne est mise en évidence au passage de la souris. */
 .station-table tbody tr:hover {
   background: #EEF5FF;
 }
 
+/* Style appliqué à la station sélectionnée par l'utilisateur. */
 .station-table tbody tr.selected-row {
   background: #EAF2FF;
   outline: 2px solid var(--blue);
@@ -586,6 +611,7 @@ input {
   color: var(--dark);
 }
 
+/* Les trois boutons de prédiction sont placés sur la même ligne. */
 .prediction-actions {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -597,6 +623,7 @@ input {
   min-height: 610px;
 }
 
+/* Dimensions communes des cartes Leaflet du projet. */
 .leaflet-map,
 .cluster-map-frame {
   height: 520px;
@@ -627,12 +654,13 @@ input {
   font-size: 13px;
 }
 
-/* ===== Stats ===== */
+/*  Stats  */
 
 .stats-filter-bar {
   align-items: end;
 }
 
+/* Grille des indicateurs principaux de la page Statistiques. */
 .stats-kpi-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -640,6 +668,7 @@ input {
   margin-bottom: 20px;
 }
 
+/* Carte utilisée pour afficher une valeur statistique importante. */
 .stat-card {
   padding: 18px;
   text-align: center;
@@ -710,6 +739,7 @@ input {
   background: #EEF5FF;
 }
 
+/* Ligne graphique utilisée pour comparer plusieurs valeurs. */
 .pretty-bar-row {
   display: grid;
   grid-template-columns: 170px 1fr 70px;
@@ -769,6 +799,7 @@ input {
   font-size: 0.88rem;
 }
 
+/* Barre de progression utilisée pour afficher des pourcentages. */
 .pretty-progress-row {
   padding: 14px;
   border: 1px solid #E4ECF7;
@@ -794,7 +825,7 @@ input {
   font-weight: 700;
 }
 
-/* ===== Pages prédiction / cluster ===== */
+/*  Pages prédiction / cluster  */
 
 .method-card,
 .sub-panel,
@@ -831,6 +862,7 @@ input {
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* Listes utilisées pour les résultats des modèles et le résumé d'une station. */
 .method-list,
 .score-list,
 .station-summary {
@@ -856,6 +888,7 @@ input {
   color: var(--muted);
 }
 
+/* Bloc principal qui met en avant le résultat de la prédiction. */
 .main-result {
   background: linear-gradient(180deg, #EEF4FF, #F8FBFF);
   border: 1px solid #DBE7F6;
@@ -872,6 +905,7 @@ input {
   margin-top: 8px;
 }
 
+/* Zone de texte utilisée pour afficher un message ou un statut. */
 .note-simple {
   margin-top: 16px;
   padding: 14px;
@@ -897,6 +931,7 @@ input {
   white-space: nowrap;
 }
 
+/* Résumé du cluster prédit dans la page Cluster. */
 .cluster-result-line {
   display: flex;
   justify-content: space-between;
@@ -923,8 +958,9 @@ input {
   margin-top: 16px;
 }
 
-/* ===== Responsive ===== */
+/*  Responsive  */
 
+/* Adaptation de la mise en page pour les tablettes et petits ordinateurs. */
 @media (max-width: 1050px) {
 
   .hero,
@@ -957,6 +993,7 @@ input {
   }
 }
 
+/* Adaptation pour les téléphones : menu mobile et colonnes verticales. */
 @media (max-width: 780px) {
   .header-inner {
     padding: 12px 16px;
@@ -1030,7 +1067,8 @@ input {
 }
 
 
-/* ===== Popup statistiques générales sur la carte Visualisation ===== */
+/*  Popup de la carte 
+   Mise en forme des informations affichées lorsqu'on clique sur une station. */
 .station-map-popup {
   min-width: 240px;
   display: grid;
